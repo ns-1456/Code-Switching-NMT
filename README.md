@@ -72,3 +72,21 @@ All components hand-written in PyTorch: sinusoidal positional encoding, multi-he
 - Remove rows with Devanagari script (model is Romanized-only)
 - Length filter: 3-50 words per sentence
 - Normalize: lowercase, strip URLs/handles/hashtags/emojis
+- Deduplicate exact pairs
+- Split: 90/5/5 train/val/test
+
+## Project Structure
+
+```
+├── src/
+│   ├── data_pipeline.py     # Download, clean, split dataset
+│   ├── tokenizer.py         # Train BPE tokenizer from scratch
+│   ├── model.py             # Full Transformer (from scratch in PyTorch)
+│   ├── train.py             # Training loop with teacher forcing
+│   ├── inference.py         # Greedy + beam search decoding
+│   └── evaluate.py          # BLEU, chrF, qualitative evaluation
+├── app.py                   # Streamlit demo
+├── notebooks/
+│   └── colab_train.ipynb    # Master training notebook for Colab Pro
+├── configs/
+│   └── config.yaml          # All hyperparameters
