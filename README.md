@@ -54,3 +54,21 @@ The model learns meaningful word alignments: "home" maps strongly to "ghar", "cr
 | Component | Specification |
 |-----------|---------------|
 | Type | Encoder-Decoder Transformer (Seq2Seq) |
+| Encoder | 4 layers, pre-norm, 8 heads |
+| Decoder | 4 layers, pre-norm, 8 heads |
+| d_model | 256 |
+| d_ff | 1024 |
+| Dropout | 0.15 |
+| Vocab | 16,000 (shared BPE) |
+| Parameters | ~15-20M |
+
+All components hand-written in PyTorch: sinusoidal positional encoding, multi-head attention, feed-forward layers, encoder/decoder stacks with pre-norm residual connections, and mask utilities.
+
+## Dataset
+
+[`findnitai/english-to-hinglish`](https://huggingface.co/datasets/findnitai/english-to-hinglish) — 189k parallel English-Hinglish pairs from HuggingFace (Apache 2.0).
+
+**Cleaning pipeline** (reduces to ~170k):
+- Remove rows with Devanagari script (model is Romanized-only)
+- Length filter: 3-50 words per sentence
+- Normalize: lowercase, strip URLs/handles/hashtags/emojis
