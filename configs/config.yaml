@@ -40,3 +40,11 @@ model:
 training:
   batch_size: 128
   num_epochs: 20
+  learning_rate: 3.0e-4
+  betas: [0.9, 0.98]
+  weight_decay: 0.01
+  warmup_steps: 1000
+  max_grad_norm: 1.0
+  label_smoothing: 0.1
+  early_stopping_patience: 3
+  checkpoint_dir: "checkpoints"
