@@ -131,3 +131,22 @@ Open `notebooks/colab_train.ipynb` in Colab Pro and run all cells. Training take
 ## Training Details
 
 - **Optimizer**: AdamW (lr=3e-4, betas=(0.9, 0.98), weight_decay=0.01)
+- **Scheduler**: Linear warmup (1000 steps) + cosine decay to 1e-5
+- **Loss**: Cross-entropy with label smoothing (0.1)
+- **Regularization**: Dropout (0.15), gradient clipping (max_norm=1.0)
+- **Teacher forcing**: Ground-truth previous token fed to decoder during training
+- **Early stopping**: Patience 3 on validation loss
+- **Batch size**: 128
+- **Epochs**: 20 (ran full, no early stop triggered)
+
+## Evaluation
+
+| Metric | Score | Notes |
+|--------|-------|-------|
+| BLEU | 58.35 | Corpus-level via sacrebleu |
+| chrF | 74.69 | Character-level F-score, better for morphologically rich Hinglish |
+
+**Known limitation**: Some common English phrases (e.g., "Don't worry about it") are passed through verbatim. This is a known challenge in code-mixed NMT — since Hinglish naturally contains full English phrases, the model sometimes learns that copying is a valid translation strategy.
+
+## License
+
