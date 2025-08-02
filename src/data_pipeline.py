@@ -10,3 +10,22 @@ and saves train/val/test CSVs.
 from __future__ import annotations
 
 import re
+import unicodedata
+from pathlib import Path
+
+import pandas as pd
+import yaml
+
+
+# ---------------------------------------------------------------------------
+# Regex patterns for cleaning
+# ---------------------------------------------------------------------------
+DEVANAGARI_RE = re.compile(r"[\u0900-\u097F]")
+URL_RE = re.compile(r"https?://\S+|www\.\S+")
+HANDLE_RE = re.compile(r"@\w+")
+HASHTAG_RE = re.compile(r"#\w+")
+# Broad emoji pattern (covers most emoji blocks)
+EMOJI_RE = re.compile(
+    "["
+    "\U0001F600-\U0001F64F"  # emoticons
+    "\U0001F300-\U0001F5FF"  # symbols & pictographs
