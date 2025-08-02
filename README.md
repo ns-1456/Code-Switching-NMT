@@ -150,3 +150,4 @@ Open `notebooks/colab_train.ipynb` in Colab Pro and run all cells. Training take
 
 ## License
 
+Apache 2.0 (dataset license).
