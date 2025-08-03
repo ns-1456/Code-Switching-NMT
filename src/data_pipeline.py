@@ -101,3 +101,25 @@ def run_pipeline(config: dict | None = None) -> tuple[pd.DataFrame, pd.DataFrame
     # 2. Drop nulls / empty
     # ------------------------------------------------------------------
     before = len(df)
+    df = df.dropna(subset=["en", "hi_ng"])
+    df = df[(df["en"].str.strip() != "") & (df["hi_ng"].str.strip() != "")]
+    print(f"[data] After null/empty filter: {len(df):,} (dropped {before - len(df):,})")
+
+    # ------------------------------------------------------------------
+    # 3. Devanagari script filter
+    # ------------------------------------------------------------------
+    before = len(df)
+    mask = df["hi_ng"].apply(lambda x: bool(DEVANAGARI_RE.search(str(x))))
+    df = df[~mask]
+    print(f"[data] After Devanagari filter: {len(df):,} (dropped {before - len(df):,})")
+
+    # ------------------------------------------------------------------
+    # 4. Normalize text
+    # ------------------------------------------------------------------
+    df["en"] = df["en"].apply(normalize_text)
+    df["hi_ng"] = df["hi_ng"].apply(normalize_text)
+
+    # Drop rows that became empty after normalization
+    df = df[(df["en"].str.strip() != "") & (df["hi_ng"].str.strip() != "")]
+
+    # ------------------------------------------------------------------
