@@ -94,3 +94,10 @@ def run_pipeline(config: dict | None = None) -> tuple[pd.DataFrame, pd.DataFrame
     hi_col = data_cfg["hi_col"]
 
     # Keep only the columns we need
+    df = df[[en_col, hi_col]].copy()
+    df.columns = ["en", "hi_ng"]
+
+    # ------------------------------------------------------------------
+    # 2. Drop nulls / empty
+    # ------------------------------------------------------------------
+    before = len(df)
