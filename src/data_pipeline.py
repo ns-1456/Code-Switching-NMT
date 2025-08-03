@@ -123,3 +123,16 @@ def run_pipeline(config: dict | None = None) -> tuple[pd.DataFrame, pd.DataFrame
     df = df[(df["en"].str.strip() != "") & (df["hi_ng"].str.strip() != "")]
 
     # ------------------------------------------------------------------
+    # 5. Length filter (3-50 words)
+    # ------------------------------------------------------------------
+    min_w = data_cfg["min_words"]
+    max_w = data_cfg["max_words"]
+    before = len(df)
+    en_wc = df["en"].apply(word_count)
+    hi_wc = df["hi_ng"].apply(word_count)
+    df = df[
+        (en_wc >= min_w) & (en_wc <= max_w) &
+        (hi_wc >= min_w) & (hi_wc <= max_w)
+    ]
+    print(f"[data] After length filter ({min_w}-{max_w} words): {len(df):,} (dropped {before - len(df):,})")
+
