@@ -57,3 +57,22 @@ def normalize_text(text: str) -> str:
     text = EMOJI_RE.sub("", text)
     # Normalize unicode (e.g. combining characters)
     text = unicodedata.normalize("NFKC", text)
+    # Collapse whitespace
+    text = MULTI_SPACE_RE.sub(" ", text).strip()
+    return text
+
+
+def word_count(text: str) -> int:
+    """Count words by splitting on whitespace."""
+    return len(text.split())
+
+
+def run_pipeline(config: dict | None = None) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """
+    Full data pipeline: download, clean, split, save.
+
+    Returns (train_df, val_df, test_df).
+    """
+    if config is None:
+        config = load_config()
+
