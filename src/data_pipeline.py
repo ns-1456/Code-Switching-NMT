@@ -76,3 +76,21 @@ def run_pipeline(config: dict | None = None) -> tuple[pd.DataFrame, pd.DataFrame
     if config is None:
         config = load_config()
 
+    data_cfg = config["data"]
+    data_dir = Path(data_cfg["data_dir"])
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    # ------------------------------------------------------------------
+    # 1. Download dataset from HuggingFace
+    # ------------------------------------------------------------------
+    from datasets import load_dataset
+
+    print("[data] Downloading findnitai/english-to-hinglish ...")
+    ds = load_dataset(data_cfg["dataset_name"], split="train")
+    df = ds.to_pandas()
+    print(f"[data] Raw rows: {len(df):,}")
+
+    en_col = data_cfg["en_col"]
+    hi_col = data_cfg["hi_col"]
+
+    # Keep only the columns we need
