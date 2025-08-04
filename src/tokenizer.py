@@ -11,3 +11,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import yaml
+from tokenizers import ByteLevelBPETokenizer
+from transformers import PreTrainedTokenizerFast
+
+
+def load_config(config_path: str = "configs/config.yaml") -> dict:
