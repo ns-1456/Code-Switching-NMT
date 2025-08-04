@@ -164,3 +164,10 @@ def run_pipeline(config: dict | None = None) -> tuple[pd.DataFrame, pd.DataFrame
     train_df.to_csv(data_dir / "train.csv", index=False)
     val_df.to_csv(data_dir / "val.csv", index=False)
     test_df.to_csv(data_dir / "test.csv", index=False)
+    print(f"[data] Saved to {data_dir}/{{train,val,test}}.csv")
+
+    return train_df, val_df, test_df
+
+
+if __name__ == "__main__":
+    run_pipeline()
