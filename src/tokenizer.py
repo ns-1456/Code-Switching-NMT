@@ -52,3 +52,27 @@ def train_tokenizer(config: dict | None = None) -> PreTrainedTokenizerFast:
     data_dir = Path(config["data"]["data_dir"])
     save_dir = Path(tok_cfg["save_dir"])
     save_dir.mkdir(parents=True, exist_ok=True)
+
+    # Build corpus.txt from training data
+    corpus_path = build_corpus(data_dir)
+
+    # Special tokens (order determines IDs: pad=0, sos=1, eos=2, unk=3)
+    special_tokens = [
+        tok_cfg["special_tokens"]["pad"],  # 0
+        tok_cfg["special_tokens"]["sos"],  # 1
+        tok_cfg["special_tokens"]["eos"],  # 2
+        tok_cfg["special_tokens"]["unk"],  # 3
+    ]
+
+    # Train BPE
+    print(f"[tokenizer] Training ByteLevelBPE (vocab_size={tok_cfg['vocab_size']}) ...")
+    bpe = ByteLevelBPETokenizer()
+    bpe.train(
+        files=[str(corpus_path)],
+        vocab_size=tok_cfg["vocab_size"],
+        min_frequency=tok_cfg["min_frequency"],
+        special_tokens=special_tokens,
+    )
+
+    # Save raw tokenizer files
+    bpe.save_model(str(save_dir))
