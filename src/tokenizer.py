@@ -17,3 +17,18 @@ from transformers import PreTrainedTokenizerFast
 
 
 def load_config(config_path: str = "configs/config.yaml") -> dict:
+    with open(config_path, "r") as f:
+        return yaml.safe_load(f)
+
+
+def build_corpus(data_dir: Path) -> Path:
+    """
+    Concatenate en + hi_ng columns from train.csv into a single
+    corpus.txt file for tokenizer training.
+    """
+    import pandas as pd
+
+    train_df = pd.read_csv(data_dir / "train.csv")
+    corpus_path = data_dir / "corpus.txt"
+
+    with open(corpus_path, "w", encoding="utf-8") as f:
