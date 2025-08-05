@@ -137,3 +137,7 @@ if __name__ == "__main__":
         "kal milte hai",
         "let's go to the market bhaiya",
     ]
+    for sent in test_sentences:
+        ids = encode(sent, tok)
+        decoded = decode(ids, tok)
+        print(f"  '{sent}' -> {ids[:10]}... -> '{decoded}'")
