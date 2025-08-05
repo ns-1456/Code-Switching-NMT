@@ -50,3 +50,13 @@ class PositionalEncoding(nn.Module):
     def __init__(self, d_model: int, max_len: int = 5000, dropout: float = 0.1):
         super().__init__()
         self.dropout = nn.Dropout(p=dropout)
+        self.d_model = d_model
+
+        pe = self._build_pe(max_len, d_model)
+        self.register_buffer("pe", pe)
+
+    @staticmethod
+    def _build_pe(max_len: int, d_model: int) -> torch.Tensor:
+        """Build the sinusoidal PE table of shape (1, max_len, d_model)."""
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
