@@ -156,3 +156,25 @@ class MultiHeadAttention(nn.Module):
         mask: torch.Tensor | None = None,
     ) -> torch.Tensor:
         """
+        Args:
+            query: (batch, seq_q, d_model)
+            key:   (batch, seq_k, d_model)
+            value: (batch, seq_k, d_model)
+            mask:  (batch, 1, seq_q, seq_k) or broadcastable
+
+        Returns:
+            (batch, seq_q, d_model)
+        """
+        batch_size = query.size(0)
+
+        # Linear projections and reshape to (batch, heads, seq, d_k)
+        Q = self.W_q(query).view(batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
+        K = self.W_k(key).view(batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
+        V = self.W_v(value).view(batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
+
+        # Scaled dot-product attention
+        attn_output, attn_weights = scaled_dot_product_attention(Q, K, V, mask)
+        self.attn_weights = attn_weights.detach()
+
+        # Concatenate heads and project
+        attn_output = (
