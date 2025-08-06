@@ -135,3 +135,24 @@ class MultiHeadAttention(nn.Module):
         assert d_model % num_heads == 0, "d_model must be divisible by num_heads"
 
         self.d_model = d_model
+        self.num_heads = num_heads
+        self.d_k = d_model // num_heads
+
+        self.W_q = nn.Linear(d_model, d_model)
+        self.W_k = nn.Linear(d_model, d_model)
+        self.W_v = nn.Linear(d_model, d_model)
+        self.W_o = nn.Linear(d_model, d_model)
+
+        self.dropout = nn.Dropout(p=dropout)
+
+        # Store attention weights for visualization
+        self.attn_weights: torch.Tensor | None = None
+
+    def forward(
+        self,
+        query: torch.Tensor,
+        key: torch.Tensor,
+        value: torch.Tensor,
+        mask: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        """
