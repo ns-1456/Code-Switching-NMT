@@ -113,3 +113,8 @@ def scaled_dot_product_attention(
     if mask is not None:
         scores = scores.masked_fill(mask, float("-inf"))
 
+    attn_weights = F.softmax(scores, dim=-1)
+    output = torch.matmul(attn_weights, value)
+    return output, attn_weights
+
+
