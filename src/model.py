@@ -118,3 +118,9 @@ def scaled_dot_product_attention(
     return output, attn_weights
 
 
+# ======================================================================
+# Multi-Head Attention
+# ======================================================================
+
+class MultiHeadAttention(nn.Module):
+    """
