@@ -100,3 +100,10 @@ def scaled_dot_product_attention(
     Args:
         query: (batch, heads, seq_q, d_k)
         key:   (batch, heads, seq_k, d_k)
+        value: (batch, heads, seq_k, d_v)
+        mask:  broadcastable to (batch, heads, seq_q, seq_k), True = masked
+
+    Returns:
+        output: (batch, heads, seq_q, d_v)
+        attn_weights: (batch, heads, seq_q, seq_k)
+    """
