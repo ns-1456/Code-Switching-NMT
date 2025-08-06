@@ -178,3 +178,14 @@ class MultiHeadAttention(nn.Module):
 
         # Concatenate heads and project
         attn_output = (
+            attn_output.transpose(1, 2)
+            .contiguous()
+            .view(batch_size, -1, self.d_model)
+        )
+        return self.W_o(attn_output)
+
+
+# ======================================================================
+# Position-wise Feed-Forward Network
+# ======================================================================
+
