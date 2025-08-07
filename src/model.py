@@ -376,3 +376,11 @@ class Decoder(nn.Module):
     ) -> torch.Tensor:
         """
         Args:
+            tgt: (batch, tgt_len) token IDs
+            enc_output: (batch, src_len, d_model)
+            tgt_mask: (batch, 1, tgt_len, tgt_len)
+            src_mask: (batch, 1, 1, src_len)
+        Returns:
+            (batch, tgt_len, d_model)
+        """
+        x = self.embedding(tgt) * math.sqrt(self.d_model)
