@@ -356,3 +356,8 @@ class Decoder(nn.Module):
         num_layers: int,
         max_len: int,
         dropout: float = 0.1,
+    ):
+        super().__init__()
+        self.embedding = nn.Embedding(vocab_size, d_model)
+        # Use a generous PE buffer (512) — it's a non-trainable buffer, costs nothing
+        self.pos_encoding = PositionalEncoding(d_model, max(max_len * 4, 512), dropout)
