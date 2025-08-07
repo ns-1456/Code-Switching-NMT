@@ -232,3 +232,19 @@ class EncoderLayer(nn.Module):
             src_mask: (batch, 1, 1, src_len) padding mask
         """
         # Pre-norm self-attention
+        _src = self.norm1(src)
+        _src = self.self_attn(_src, _src, _src, mask=src_mask)
+        src = src + self.dropout1(_src)
+
+        # Pre-norm feed-forward
+        _src = self.norm2(src)
+        _src = self.ffn(_src)
+        src = src + self.dropout2(_src)
+
+        return src
+
+
+# ======================================================================
+# Decoder Layer (Pre-Norm)
+# ======================================================================
+
