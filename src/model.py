@@ -361,3 +361,18 @@ class Decoder(nn.Module):
         self.embedding = nn.Embedding(vocab_size, d_model)
         # Use a generous PE buffer (512) — it's a non-trainable buffer, costs nothing
         self.pos_encoding = PositionalEncoding(d_model, max(max_len * 4, 512), dropout)
+        self.layers = nn.ModuleList(
+            [DecoderLayer(d_model, num_heads, d_ff, dropout) for _ in range(num_layers)]
+        )
+        self.norm = nn.LayerNorm(d_model)
+        self.d_model = d_model
+
+    def forward(
+        self,
+        tgt: torch.Tensor,
+        enc_output: torch.Tensor,
+        tgt_mask: torch.Tensor | None = None,
+        src_mask: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        """
+        Args:
