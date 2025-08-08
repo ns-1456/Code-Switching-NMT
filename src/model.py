@@ -485,3 +485,20 @@ class Seq2SeqTransformer(nn.Module):
         enc_output: torch.Tensor,
         tgt_mask: torch.Tensor | None = None,
         src_mask: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        """Decode target given encoder output (used during inference)."""
+        return self.decoder(tgt, enc_output, tgt_mask, src_mask)
+
+    def get_cross_attention_weights(self) -> list[torch.Tensor]:
+        """
+        Extract cross-attention weights from the last forward pass.
+        Returns a list of tensors (one per decoder layer), each of shape
+        (batch, num_heads, tgt_len, src_len).
+        """
+        weights = []
+        for layer in self.decoder.layers:
+            if layer.cross_attn.attn_weights is not None:
+                weights.append(layer.cross_attn.attn_weights)
+        return weights
+
+
