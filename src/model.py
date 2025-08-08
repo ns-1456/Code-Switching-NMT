@@ -411,3 +411,24 @@ class Seq2SeqTransformer(nn.Module):
         d_model: int = 256,
         num_heads: int = 8,
         num_encoder_layers: int = 4,
+        num_decoder_layers: int = 4,
+        d_ff: int = 1024,
+        max_len: int = 64,
+        dropout: float = 0.15,
+        pad_idx: int = 0,
+    ):
+        super().__init__()
+
+        self.pad_idx = pad_idx
+
+        self.encoder = Encoder(
+            vocab_size=src_vocab_size,
+            d_model=d_model,
+            num_heads=num_heads,
+            d_ff=d_ff,
+            num_layers=num_encoder_layers,
+            max_len=max_len,
+            dropout=dropout,
+        )
+
+        self.decoder = Decoder(
