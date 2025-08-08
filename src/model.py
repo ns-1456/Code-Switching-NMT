@@ -389,3 +389,25 @@ class Decoder(nn.Module):
             x = layer(x, enc_output, tgt_mask, src_mask)
         return self.norm(x)
 
+
+# ======================================================================
+# Full Seq2Seq Transformer
+# ======================================================================
+
+class Seq2SeqTransformer(nn.Module):
+    """
+    Complete Encoder-Decoder Transformer for sequence-to-sequence tasks.
+
+    Components:
+        - Encoder: embeds + encodes source sequence
+        - Decoder: embeds + decodes target sequence with cross-attention
+        - Generator: projects decoder output to vocabulary logits
+    """
+
+    def __init__(
+        self,
+        src_vocab_size: int,
+        tgt_vocab_size: int,
+        d_model: int = 256,
+        num_heads: int = 8,
+        num_encoder_layers: int = 4,
