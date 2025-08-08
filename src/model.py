@@ -474,3 +474,14 @@ class Seq2SeqTransformer(nn.Module):
         dec_output = self.decoder(tgt, enc_output, tgt_mask, src_mask)
         logits = self.generator(dec_output)
         return logits
+
+    def encode(self, src: torch.Tensor, src_mask: torch.Tensor | None = None) -> torch.Tensor:
+        """Encode source (used during inference)."""
+        return self.encoder(src, src_mask)
+
+    def decode(
+        self,
+        tgt: torch.Tensor,
+        enc_output: torch.Tensor,
+        tgt_mask: torch.Tensor | None = None,
+        src_mask: torch.Tensor | None = None,
