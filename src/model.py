@@ -502,3 +502,13 @@ class Seq2SeqTransformer(nn.Module):
         return weights
 
 
+# ======================================================================
+# Mask Utilities
+# ======================================================================
+
+def create_padding_mask(seq: torch.Tensor, pad_idx: int) -> torch.Tensor:
+    """
+    Create a padding mask where True = position is padding (should be masked).
+
+    Args:
+        seq: (batch, seq_len) token IDs
