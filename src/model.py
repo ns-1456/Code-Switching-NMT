@@ -384,3 +384,8 @@ class Decoder(nn.Module):
             (batch, tgt_len, d_model)
         """
         x = self.embedding(tgt) * math.sqrt(self.d_model)
+        x = self.pos_encoding(x)
+        for layer in self.layers:
+            x = layer(x, enc_output, tgt_mask, src_mask)
+        return self.norm(x)
+
