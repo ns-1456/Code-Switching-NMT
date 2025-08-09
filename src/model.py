@@ -526,3 +526,12 @@ def create_causal_mask(size: int, device: torch.device | None = None) -> torch.T
     True = position should be masked (cannot attend to future tokens).
 
     Args:
+        size: sequence length
+        device: target device
+
+    Returns:
+        (1, 1, size, size) boolean mask
+    """
+    mask = torch.triu(torch.ones(size, size, device=device), diagonal=1).bool()
+    return mask.unsqueeze(0).unsqueeze(0)
+
