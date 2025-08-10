@@ -143,3 +143,16 @@ class WarmupCosineScheduler:
             return self.max_lr * self.current_step / max(1, self.warmup_steps)
         else:
             # Cosine decay
+            progress = (self.current_step - self.warmup_steps) / max(
+                1, self.total_steps - self.warmup_steps
+            )
+            return self.min_lr + 0.5 * (self.max_lr - self.min_lr) * (
+                1 + math.cos(math.pi * progress)
+            )
+
+    def get_lr(self) -> float:
+        return self._compute_lr()
+
+
+# ======================================================================
+# Qualitative Monitor
