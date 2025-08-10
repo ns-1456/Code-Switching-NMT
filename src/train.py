@@ -75,3 +75,11 @@ class TranslationDataset(Dataset):
         # Encode (without special tokens — we add them manually)
         src_ids = self.tokenizer.encode(en_text, add_special_tokens=False)
         tgt_ids = self.tokenizer.encode(hi_text, add_special_tokens=False)
+
+        # Truncate to max_len - 2 (room for <sos> and <eos>)
+        src_ids = src_ids[: self.max_len - 2]
+        tgt_ids = tgt_ids[: self.max_len - 2]
+
+        # Add <sos> and <eos>
+        src_ids = [self.sos_id] + src_ids + [self.eos_id]
+        tgt_ids = [self.sos_id] + tgt_ids + [self.eos_id]
