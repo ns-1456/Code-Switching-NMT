@@ -118,3 +118,28 @@ class WarmupCosineScheduler:
 
     def __init__(
         self,
+        optimizer: torch.optim.Optimizer,
+        warmup_steps: int,
+        total_steps: int,
+        max_lr: float,
+        min_lr: float = 1e-5,
+    ):
+        self.optimizer = optimizer
+        self.warmup_steps = warmup_steps
+        self.total_steps = total_steps
+        self.max_lr = max_lr
+        self.min_lr = min_lr
+        self.current_step = 0
+
+    def step(self):
+        self.current_step += 1
+        lr = self._compute_lr()
+        for param_group in self.optimizer.param_groups:
+            param_group["lr"] = lr
+
+    def _compute_lr(self) -> float:
+        if self.current_step < self.warmup_steps:
+            # Linear warmup
+            return self.max_lr * self.current_step / max(1, self.warmup_steps)
+        else:
+            # Cosine decay
