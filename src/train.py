@@ -156,3 +156,17 @@ class WarmupCosineScheduler:
 
 # ======================================================================
 # Qualitative Monitor
+# ======================================================================
+
+def qualitative_check(
+    model: Seq2SeqTransformer,
+    tokenizer,
+    sentences: list[str],
+    device: torch.device,
+    max_len: int = 64,
+    sos_id: int = 1,
+    eos_id: int = 2,
+    pad_idx: int = 0,
+):
+    """
+    Translate a fixed set of sentences using greedy decoding and print results.
