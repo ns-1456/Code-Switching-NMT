@@ -208,3 +208,16 @@ def qualitative_check(
 
 
 # ======================================================================
+# Training Function
+# ======================================================================
+
+def train(config: dict | None = None):
+    """Full training pipeline: load data, build model, train, save."""
+
+    if config is None:
+        config = load_config()
+
+    data_cfg = config["data"]
+    model_cfg = config["model"]
+    train_cfg = config["training"]
+    eval_cfg = config["evaluation"]
