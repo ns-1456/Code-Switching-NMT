@@ -194,3 +194,17 @@ def qualitative_check(
             logits = model.generator(dec_output[:, -1, :])
             next_token = logits.argmax(dim=-1).item()
 
+            if next_token == eos_id:
+                break
+            tgt_ids.append(next_token)
+
+        # Decode (skip <sos>)
+        output = tokenizer.decode(tgt_ids[1:], skip_special_tokens=True)
+        print(f"    EN: {sent}")
+        print(f"    HI: {output}")
+        print()
+
+    model.train()
+
+
+# ======================================================================
