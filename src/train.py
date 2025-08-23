@@ -327,3 +327,15 @@ def train(config: dict | None = None):
         num_batches = 0
 
         pbar = tqdm(train_loader, desc=f"Epoch {epoch}/{train_cfg['num_epochs']} [Train]")
+        for src, tgt in pbar:
+            src = src.to(device)  # (batch, src_len)
+            tgt = tgt.to(device)  # (batch, tgt_len)
+
+            # Teacher forcing: input is tgt[:-1], target is tgt[1:]
+            tgt_input = tgt[:, :-1]
+            tgt_output = tgt[:, 1:]
+
+            # Create masks
+            src_mask = create_padding_mask(src, pad_idx)
+            tgt_mask = create_tgt_mask(tgt_input, pad_idx)
+
