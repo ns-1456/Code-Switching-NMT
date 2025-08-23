@@ -236,3 +236,28 @@ def train(config: dict | None = None):
 
     print(f"[train] Vocab size: {vocab_size}")
 
+    # ------------------------------------------------------------------
+    # Build datasets
+    # ------------------------------------------------------------------
+    data_dir = Path(data_cfg["data_dir"])
+
+    train_ds = TranslationDataset(
+        data_dir / "train.csv", tokenizer, max_len=model_cfg["max_seq_len"],
+        sos_id=sos_id, eos_id=eos_id,
+    )
+    val_ds = TranslationDataset(
+        data_dir / "val.csv", tokenizer, max_len=model_cfg["max_seq_len"],
+        sos_id=sos_id, eos_id=eos_id,
+    )
+
+    collate = lambda batch: collate_fn(batch, pad_idx=pad_idx)
+
+    train_loader = DataLoader(
+        train_ds,
+        batch_size=train_cfg["batch_size"],
+        shuffle=True,
+        num_workers=train_cfg["num_workers"],
+        pin_memory=True,
+        collate_fn=collate,
+        drop_last=True,
+    )
