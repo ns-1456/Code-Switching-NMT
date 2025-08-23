@@ -312,3 +312,18 @@ def train(config: dict | None = None):
     # Training loop
     # ------------------------------------------------------------------
     best_val_loss = float("inf")
+    patience_counter = 0
+    monitor_sentences = eval_cfg["monitor_sentences"]
+
+    print(f"[train] Starting training for {train_cfg['num_epochs']} epochs ...")
+    print(f"[train] Train batches: {len(train_loader)}, Val batches: {len(val_loader)}")
+
+    for epoch in range(1, train_cfg["num_epochs"] + 1):
+        epoch_start = time.time()
+
+        # --- Train ---
+        model.train()
+        train_loss = 0.0
+        num_batches = 0
+
+        pbar = tqdm(train_loader, desc=f"Epoch {epoch}/{train_cfg['num_epochs']} [Train]")
