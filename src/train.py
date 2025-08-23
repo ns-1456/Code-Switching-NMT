@@ -303,3 +303,12 @@ def train(config: dict | None = None):
     )
 
     # ------------------------------------------------------------------
+    # Checkpoint directory
+    # ------------------------------------------------------------------
+    ckpt_dir = Path(train_cfg["checkpoint_dir"])
+    ckpt_dir.mkdir(parents=True, exist_ok=True)
+
+    # ------------------------------------------------------------------
+    # Training loop
+    # ------------------------------------------------------------------
+    best_val_loss = float("inf")
