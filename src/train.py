@@ -419,3 +419,12 @@ def train(config: dict | None = None):
             )
             print(f"  [checkpoint] Saved best model (val_loss={avg_val_loss:.4f}) to {ckpt_path}")
         else:
+            patience_counter += 1
+            print(f"  [early-stop] No improvement. Patience: {patience_counter}/{train_cfg['early_stopping_patience']}")
+
+            if patience_counter >= train_cfg["early_stopping_patience"]:
+                print(f"  [early-stop] Stopping training at epoch {epoch}.")
+                break
+
+    print(f"\n[train] Training complete. Best val_loss: {best_val_loss:.4f}")
+    return model
