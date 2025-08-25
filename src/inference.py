@@ -81,3 +81,17 @@ def translate_greedy(
     max_len: int = 64,
     sos_id: int | None = None,
     eos_id: int | None = None,
+    pad_idx: int | None = None,
+) -> tuple[str, list[torch.Tensor]]:
+    """
+    Greedy decoding: pick argmax at each time step.
+
+    Args:
+        model: trained Seq2SeqTransformer
+        tokenizer: trained tokenizer
+        sentence: English input sentence
+        device: torch device
+        max_len: maximum output length
+        sos_id, eos_id, pad_idx: special token IDs (auto-detected if None)
+
+    Returns:
