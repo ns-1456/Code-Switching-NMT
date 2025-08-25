@@ -48,3 +48,21 @@ def load_model_for_inference(
     tokenizer = load_tokenizer(config)
 
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
+
+    model = build_model(config, vocab_size=tokenizer.vocab_size)
+
+    # Filter out positional encoding buffers from checkpoint — they may
+    # have been saved with a smaller size (e.g. 64) than the current model
+    # uses (512). The PE buffer is deterministic (sinusoidal), so the fresh
+    # one in the new model is identical for overlapping positions.
+    saved_state = checkpoint["model_state_dict"]
+    pe_keys = [k for k in saved_state if ".pe" in k]
+    for k in pe_keys:
+        if saved_state[k].shape != model.state_dict()[k].shape:
+            del saved_state[k]
+
+    model.load_state_dict(saved_state, strict=False)
+    model = model.to(device)
+    model.eval()
+
+    print(f"[inference] Loaded model from {checkpoint_path} (epoch {checkpoint.get('epoch', '?')})")
