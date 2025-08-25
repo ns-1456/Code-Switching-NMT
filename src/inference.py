@@ -18,3 +18,22 @@ import yaml
 
 from src.model import (
     Seq2SeqTransformer,
+    build_model,
+    create_padding_mask,
+    create_tgt_mask,
+    load_config,
+)
+from src.tokenizer import load_tokenizer
+
+
+# ======================================================================
+# Model Loading
+# ======================================================================
+
+def load_model_for_inference(
+    checkpoint_path: str = "checkpoints/best_model.pt",
+    config_path: str = "configs/config.yaml",
+    device: torch.device | None = None,
+) -> tuple[Seq2SeqTransformer, object, dict]:
+    """
+    Load a trained model from checkpoint.
