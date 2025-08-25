@@ -43,3 +43,8 @@ def load_model_for_inference(
     """
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    config = load_config(config_path)
+    tokenizer = load_tokenizer(config)
+
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
