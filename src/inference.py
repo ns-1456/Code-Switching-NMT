@@ -123,3 +123,22 @@ def translate_greedy(
         dec_output = model.decode(tgt, enc_output, tgt_mask, src_mask)
         logits = model.generator(dec_output[:, -1, :])
         next_token = logits.argmax(dim=-1).item()
+
+        if next_token == eos_id:
+            break
+        tgt_ids.append(next_token)
+
+    # Get attention weights for visualization
+    attn_weights = model.get_cross_attention_weights()
+
+    # Decode output tokens (skip <sos>)
+    output_text = tokenizer.decode(tgt_ids[1:], skip_special_tokens=True)
+    return output_text, attn_weights
+
+
+# ======================================================================
+# Beam Search Decoding
+# ======================================================================
+
+@dataclass
+class BeamHypothesis:
