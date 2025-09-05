@@ -190,3 +190,15 @@ def translate_beam(
         pad_idx = tokenizer.pad_token_id
 
     model.eval()
+
+    # Encode source
+    src_ids = tokenizer.encode(sentence, add_special_tokens=False)
+    src_ids = [sos_id] + src_ids + [eos_id]
+    src = torch.tensor([src_ids], dtype=torch.long, device=device)
+    src_mask = create_padding_mask(src, pad_idx)
+
+    enc_output = model.encode(src, src_mask)
+
+    # Initialize beams
+    beams: list[BeamHypothesis] = [BeamHypothesis(tokens=[sos_id], log_prob=0.0)]
+    completed: list[BeamHypothesis] = []
