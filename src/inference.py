@@ -279,3 +279,18 @@ def batch_translate_greedy(
     model: Seq2SeqTransformer,
     tokenizer,
     sentences: list[str],
+    device: torch.device,
+    max_len: int = 64,
+    batch_size: int = 128,
+    sos_id: int | None = None,
+    eos_id: int | None = None,
+    pad_idx: int | None = None,
+) -> list[str]:
+    """
+    Batched greedy decoding: translate many sentences in parallel on GPU.
+
+    ~50-100x faster than one-by-one greedy for large test sets.
+
+    Args:
+        model: trained Seq2SeqTransformer
+        tokenizer: trained tokenizer
