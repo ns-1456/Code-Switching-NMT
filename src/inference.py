@@ -330,3 +330,14 @@ def batch_translate_greedy(
         for i, ids in enumerate(src_id_lists):
             src_padded[i, : len(ids)] = torch.tensor(ids, dtype=torch.long)
 
+        src_mask = create_padding_mask(src_padded, pad_idx)  # (bsz, 1, 1, max_src)
+
+        with torch.no_grad():
+            enc_output = model.encode(src_padded, src_mask)  # (bsz, max_src, d_model)
+
+        # --- Decode greedily in parallel ---
+        # Start with <sos> for every sentence
+        tgt_ids = torch.full((bsz, 1), sos_id, dtype=torch.long, device=device)
+        finished = torch.zeros(bsz, dtype=torch.bool, device=device)
+
+        for _ in range(max_len):
