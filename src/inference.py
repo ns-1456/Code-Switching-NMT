@@ -227,3 +227,12 @@ def translate_beam(
                 new_log_prob = beam.log_prob + topk_log_probs[i].item()
                 all_candidates.append(
                     BeamHypothesis(tokens=new_tokens, log_prob=new_log_prob)
+                )
+
+        if not all_candidates:
+            break
+
+        # Select top beam_width candidates (by length-normalized score)
+        all_candidates.sort(
+            key=lambda h: h.log_prob / (len(h.tokens) ** length_penalty),
+            reverse=True,
