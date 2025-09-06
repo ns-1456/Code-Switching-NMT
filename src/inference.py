@@ -259,3 +259,23 @@ def translate_beam(
     # Run final forward pass to get attention weights
     tgt = torch.tensor([best.tokens], dtype=torch.long, device=device)
     tgt_mask = create_tgt_mask(tgt, pad_idx)
+    _ = model.decode(tgt, enc_output, tgt_mask, src_mask)
+    attn_weights = model.get_cross_attention_weights()
+
+    # Decode tokens (skip <sos> and <eos>)
+    token_ids = best.tokens[1:]  # skip <sos>
+    if token_ids and token_ids[-1] == eos_id:
+        token_ids = token_ids[:-1]
+    output_text = tokenizer.decode(token_ids, skip_special_tokens=True)
+
+    return output_text, attn_weights
+
+
+# ======================================================================
+# Batched Greedy Decoding (FAST — for corpus evaluation)
+# ======================================================================
+
+def batch_translate_greedy(
+    model: Seq2SeqTransformer,
+    tokenizer,
+    sentences: list[str],
