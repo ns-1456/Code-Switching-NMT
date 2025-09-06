@@ -236,3 +236,26 @@ def translate_beam(
         all_candidates.sort(
             key=lambda h: h.log_prob / (len(h.tokens) ** length_penalty),
             reverse=True,
+        )
+        beams = all_candidates[:beam_width]
+
+        # Check if all beams are complete
+        if all(b.tokens[-1] == eos_id for b in beams):
+            completed.extend(beams)
+            break
+
+    # Add remaining beams to completed
+    completed.extend(beams)
+
+    # Pick best hypothesis
+    if completed:
+        best = max(
+            completed,
+            key=lambda h: h.log_prob / (max(1, len(h.tokens)) ** length_penalty),
+        )
+    else:
+        best = beams[0] if beams else BeamHypothesis(tokens=[sos_id])
+
+    # Run final forward pass to get attention weights
+    tgt = torch.tensor([best.tokens], dtype=torch.long, device=device)
+    tgt_mask = create_tgt_mask(tgt, pad_idx)
