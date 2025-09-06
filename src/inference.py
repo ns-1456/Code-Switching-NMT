@@ -215,3 +215,15 @@ def translate_beam(
             tgt = torch.tensor([beam.tokens], dtype=torch.long, device=device)
             tgt_mask = create_tgt_mask(tgt, pad_idx)
 
+            dec_output = model.decode(tgt, enc_output, tgt_mask, src_mask)
+            logits = model.generator(dec_output[:, -1, :])
+            log_probs = torch.log_softmax(logits, dim=-1).squeeze(0)
+
+            # Get top-k candidates
+            topk_log_probs, topk_ids = log_probs.topk(beam_width)
+
+            for i in range(beam_width):
+                new_tokens = beam.tokens + [topk_ids[i].item()]
+                new_log_prob = beam.log_prob + topk_log_probs[i].item()
+                all_candidates.append(
+                    BeamHypothesis(tokens=new_tokens, log_prob=new_log_prob)
