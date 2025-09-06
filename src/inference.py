@@ -316,3 +316,10 @@ def batch_translate_greedy(
     for batch_start in range(0, len(sentences), batch_size):
         batch_sents = sentences[batch_start : batch_start + batch_size]
         bsz = len(batch_sents)
+
+        # --- Encode all sources in this batch ---
+        # Tokenize and add <sos>/<eos>
+        src_id_lists = []
+        for sent in batch_sents:
+            ids = tokenizer.encode(sent, add_special_tokens=False)
+            src_id_lists.append([sos_id] + ids + [eos_id])
