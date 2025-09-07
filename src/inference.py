@@ -424,3 +424,10 @@ if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     test_sentences = [
+        "I am going home",
+        "Are you crazy?",
+        "Let's meet tomorrow",
+        "What is your name?",
+        "I don't understand this",
+    ]
+
