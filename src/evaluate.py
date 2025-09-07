@@ -24,3 +24,14 @@ from src.inference import (
     batch_translate_greedy,
 )
 from src.model import load_config
+
+
+# ======================================================================
+# Corpus-level Evaluation
+# ======================================================================
+
+def evaluate_test_set(
+    model,
+    tokenizer,
+    config: dict,
+    device: torch.device,
