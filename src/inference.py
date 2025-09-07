@@ -431,3 +431,14 @@ if __name__ == "__main__":
         "I don't understand this",
     ]
 
+    print("\n=== Greedy Decoding ===")
+    for sent in test_sentences:
+        output, _ = translate_greedy(model, tokenizer, sent, device)
+        print(f"  EN: {sent}")
+        print(f"  HI: {output}\n")
+
+    print("\n=== Beam Search (width=5) ===")
+    for sent in test_sentences:
+        output, _ = translate_beam(model, tokenizer, sent, device, beam_width=5)
+        print(f"  EN: {sent}")
+        print(f"  HI: {output}\n")
