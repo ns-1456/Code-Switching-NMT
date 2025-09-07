@@ -417,3 +417,10 @@ def translate(
 
 # ======================================================================
 # Main
+# ======================================================================
+
+if __name__ == "__main__":
+    model, tokenizer, config = load_model_for_inference()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    test_sentences = [
