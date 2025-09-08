@@ -179,3 +179,27 @@ def save_report(
 
         # Vibe check
         f.write("QUALITATIVE VIBE CHECK\n")
+        f.write("-" * 40 + "\n")
+        for en, hi in vibe_results:
+            f.write(f"  EN: {en}\n")
+            f.write(f"  HI: {hi}\n\n")
+
+        # Sample predictions from test set
+        f.write("\nSAMPLE TEST SET PREDICTIONS (first 30)\n")
+        f.write("-" * 40 + "\n")
+        for src, pred, ref in eval_results["predictions"][:30]:
+            f.write(f"  SRC: {src}\n")
+            f.write(f"  REF: {ref}\n")
+            f.write(f"  PRD: {pred}\n\n")
+
+    print(f"[eval] Report saved to {out}")
+
+
+# ======================================================================
+# Main
+# ======================================================================
+
+def run_evaluation(
+    checkpoint_path: str = "checkpoints/best_model.pt",
+    config_path: str = "configs/config.yaml",
+    corpus_method: str = "greedy",
