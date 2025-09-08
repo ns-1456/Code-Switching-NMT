@@ -81,3 +81,10 @@ def evaluate_test_set(
 
     print(f"\n[eval] Results:")
     print(f"  BLEU:  {bleu.score:.2f}")
+    print(f"  chrF:  {chrf.score:.2f}")
+
+    return {
+        "bleu": bleu,
+        "chrf": chrf,
+        "predictions": list(zip(sources, predictions, references)),
+    }
