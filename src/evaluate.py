@@ -57,3 +57,27 @@ def evaluate_test_set(
     sources = [str(s) for s in test_df["en"].tolist()]
     references = [str(s) for s in test_df["hi_ng"].tolist()]
 
+    print(f"[eval] Evaluating on {len(test_df):,} test examples ({method} decoding) ...")
+
+    if method == "greedy":
+        # ---- Fast batched greedy (GPU-parallel) ----
+        num_batches = (len(sources) + batch_size - 1) // batch_size
+        print(f"[eval] Using batched greedy: {num_batches} batches of {batch_size}")
+        predictions = batch_translate_greedy(
+            model, tokenizer, sources, device, batch_size=batch_size,
+        )
+    else:
+        # ---- One-by-one beam search (slow, use only if needed) ----
+        predictions = []
+        for idx in tqdm(range(len(sources)), desc="Evaluating (beam)"):
+            pred_text, _ = translate_beam(
+                model, tokenizer, sources[idx], device, beam_width=beam_width
+            )
+            predictions.append(pred_text)
+
+    # Compute BLEU (sacrebleu expects a list of reference lists)
+    bleu = sacrebleu.corpus_bleu(predictions, [references])
+    chrf = sacrebleu.corpus_chrf(predictions, [references])
+
+    print(f"\n[eval] Results:")
+    print(f"  BLEU:  {bleu.score:.2f}")
