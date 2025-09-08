@@ -163,3 +163,19 @@ def save_report(
 ):
     """Save evaluation results to a text file."""
     out = Path(output_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+
+    with open(out, "w", encoding="utf-8") as f:
+        f.write("=" * 60 + "\n")
+        f.write("  English → Hinglish NMT — Evaluation Report\n")
+        f.write("=" * 60 + "\n\n")
+
+        # Metrics
+        f.write("METRICS\n")
+        f.write("-" * 40 + "\n")
+        f.write(f"  BLEU:  {eval_results['bleu'].score:.2f}\n")
+        f.write(f"  chrF:  {eval_results['chrf'].score:.2f}\n")
+        f.write(f"  Test set size: {len(eval_results['predictions']):,}\n\n")
+
+        # Vibe check
+        f.write("QUALITATIVE VIBE CHECK\n")
