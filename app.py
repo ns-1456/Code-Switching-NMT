@@ -20,3 +20,16 @@ import numpy as np
 # Ensure src is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from src.inference import load_model_for_inference, translate_greedy, translate_beam
+from src.model import Seq2SeqTransformer
+
+
+# ======================================================================
+# Page Config
+# ======================================================================
+
+st.set_page_config(
+    page_title="English → Hinglish Translator",
+    page_icon="🇮🇳",
+    layout="centered",
+)
