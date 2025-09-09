@@ -233,3 +233,8 @@ def run_evaluation(
         method=vibe_method, beam_width=beam_width,
     )
 
+    # Save report
+    save_report(eval_results, vibe_results)
+
+    return eval_results, vibe_results
+
