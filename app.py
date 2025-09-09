@@ -8,3 +8,8 @@ Features:
   - Beam width slider
   - Attention heatmap visualization
   - Clean, modern UI
+"""
+
+import sys
+from pathlib import Path
+
