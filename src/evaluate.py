@@ -238,3 +238,6 @@ def run_evaluation(
 
     return eval_results, vibe_results
 
+
+if __name__ == "__main__":
+    run_evaluation()
