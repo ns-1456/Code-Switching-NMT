@@ -13,3 +13,10 @@ Features:
 import sys
 from pathlib import Path
 
+import streamlit as st
+import torch
+import numpy as np
+
+# Ensure src is importable
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
