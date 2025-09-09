@@ -33,3 +33,20 @@ st.set_page_config(
     page_icon="🇮🇳",
     layout="centered",
 )
+
+
+# ======================================================================
+# Model Loading (cached)
+# ======================================================================
+
+@st.cache_resource
+def load_model():
+    """Load model once and cache it."""
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model, tokenizer, config = load_model_for_inference(device=device)
+    return model, tokenizer, config, device
+
+
+# ======================================================================
+# Attention Heatmap
+# ======================================================================
