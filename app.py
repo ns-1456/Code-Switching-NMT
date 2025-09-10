@@ -202,3 +202,23 @@ def main():
         with st.spinner("Translating..."):
             if method == "Greedy":
                 output, attn_weights = translate_greedy(
+                    model, tokenizer, input_text.strip(), device
+                )
+            else:
+                output, attn_weights = translate_beam(
+                    model, tokenizer, input_text.strip(), device,
+                    beam_width=beam_width,
+                )
+
+        # Result
+        st.divider()
+        st.markdown("### Translation")
+
+        rcol1, rcol2 = st.columns(2)
+        with rcol1:
+            st.markdown("**English**")
+            st.info(input_text.strip())
+        with rcol2:
+            st.markdown("**Hinglish**")
+            st.success(output)
+
