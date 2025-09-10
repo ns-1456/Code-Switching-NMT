@@ -91,3 +91,26 @@ def plot_attention_heatmap(
         xticklabels=src_tokens[:src_len],
         yticklabels=tgt_tokens[:tgt_len],
         cmap="YlOrRd",
+        ax=ax,
+        cbar_kws={"label": "Attention Weight"},
+    )
+
+    ax.set_xlabel("Source (English)", fontsize=12)
+    ax.set_ylabel("Target (Hinglish)", fontsize=12)
+    ax.set_title("Cross-Attention Heatmap (Averaged over Heads)", fontsize=13)
+
+    plt.xticks(rotation=45, ha="right", fontsize=9)
+    plt.yticks(fontsize=9)
+    plt.tight_layout()
+
+    st.pyplot(fig)
+    plt.close(fig)
+
+
+# ======================================================================
+# UI
+# ======================================================================
+
+def main():
+    # Header
+    st.title("English → Hinglish Translator")
