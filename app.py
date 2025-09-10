@@ -114,3 +114,20 @@ def plot_attention_heatmap(
 def main():
     # Header
     st.title("English → Hinglish Translator")
+    st.markdown(
+        "A **from-scratch Transformer** trained on 150k+ parallel sentences. "
+        "Type an English sentence and get Hinglish output."
+    )
+
+    st.divider()
+
+    # Load model
+    try:
+        model, tokenizer, config, device = load_model()
+    except FileNotFoundError:
+        st.error(
+            "Model checkpoint not found! "
+            "Run training first: `python -m src.train`"
+        )
+        return
+
