@@ -69,3 +69,25 @@ def plot_attention_heatmap(
     import matplotlib.pyplot as plt
     import matplotlib
     matplotlib.use("Agg")
+    import seaborn as sns
+
+    if not attn_weights:
+        st.warning("No attention weights available.")
+        return
+
+    # Get the specified layer's attention, averaged across heads
+    attn = attn_weights[layer_idx]  # (1, heads, tgt_len, src_len)
+    attn = attn.squeeze(0).mean(dim=0).cpu().numpy()  # (tgt_len, src_len)
+
+    # Trim to actual token lengths
+    tgt_len = min(len(tgt_tokens), attn.shape[0])
+    src_len = min(len(src_tokens), attn.shape[1])
+    attn = attn[:tgt_len, :src_len]
+
+    fig, ax = plt.subplots(figsize=(max(8, src_len * 0.6), max(4, tgt_len * 0.5)))
+
+    sns.heatmap(
+        attn,
+        xticklabels=src_tokens[:src_len],
+        yticklabels=tgt_tokens[:tgt_len],
+        cmap="YlOrRd",
