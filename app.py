@@ -167,3 +167,24 @@ def main():
         st.markdown(f"- Device: `{device}`")
 
     # Input
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        input_text = st.text_input(
+            "Enter English sentence:",
+            placeholder="e.g., Let's meet tomorrow",
+            label_visibility="visible",
+        )
+    with col2:
+        st.write("")  # spacing
+        st.write("")
+        translate_btn = st.button("Translate", type="primary", use_container_width=True)
+
+    # Example sentences
+    with st.expander("Try these examples"):
+        examples = [
+            "I am going home",
+            "Are you crazy?",
+            "Let's meet tomorrow",
+            "What is your name?",
+            "The food is delicious",
+            "Don't worry about it",
