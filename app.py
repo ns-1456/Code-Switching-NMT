@@ -58,3 +58,14 @@ def plot_attention_heatmap(
     layer_idx: int = -1,
 ):
     """
+    Plot encoder-decoder cross-attention weights as a heatmap.
+
+    Args:
+        attn_weights: list of (batch, heads, tgt_len, src_len) per layer
+        src_tokens: source token strings
+        tgt_tokens: target token strings
+        layer_idx: which layer to visualize (-1 = last)
+    """
+    import matplotlib.pyplot as plt
+    import matplotlib
+    matplotlib.use("Agg")
