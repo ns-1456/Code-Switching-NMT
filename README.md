@@ -90,3 +90,16 @@ All components hand-written in PyTorch: sinusoidal positional encoding, multi-he
 │   └── colab_train.ipynb    # Master training notebook for Colab Pro
 ├── configs/
 │   └── config.yaml          # All hyperparameters
+├── assets/                  # Attention heatmap images
+└── requirements.txt
+```
+
+## Quick Start
+
+### 1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Run the pipeline
