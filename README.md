@@ -31,3 +31,26 @@ Cross-attention heatmaps showing which English source words the model attends to
 <p align="center">
   <img src="assets/attn_going_home.png" width="48%" />
   <img src="assets/attn_are_you_crazy.png" width="48%" />
+</p>
+<p align="center">
+  <img src="assets/attn_lets_meet.png" width="48%" />
+</p>
+
+The model learns meaningful word alignments: "home" maps strongly to "ghar", "crazy" maps to "crazy" (code-switch retention), and "meet" aligns with "milne". The attention patterns confirm the model isn't just memorizing sequences — it's learning cross-lingual structure.
+
+---
+
+## Highlights
+
+- **From-scratch Transformer** built entirely in PyTorch (no pre-trained weights, no HuggingFace model classes)
+- **Custom BPE tokenizer** trained on mixed English + Hinglish corpus (16k shared vocab)
+- **58.35 BLEU** on 9.2k test sentences (corpus-level, sacrebleu)
+- **Attention visualization** showing learned word-level alignment between source and target
+- **Beam search** decoding with configurable width
+- **Streamlit demo** for interactive translation
+
+## Architecture
+
+| Component | Specification |
+|-----------|---------------|
+| Type | Encoder-Decoder Transformer (Seq2Seq) |
