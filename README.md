@@ -103,3 +103,17 @@ pip install -r requirements.txt
 ```
 
 ### 2. Run the pipeline
+
+```bash
+# Step 1: Download and clean data
+python -m src.data_pipeline
+
+# Step 2: Train tokenizer
+python -m src.tokenizer
+
+# Step 3: Train model
+python -m src.train
+
+# Step 4: Evaluate
+python -m src.evaluate
+```
