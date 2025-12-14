@@ -117,3 +117,17 @@ python -m src.train
 # Step 4: Evaluate
 python -m src.evaluate
 ```
+
+### 3. Launch demo
+
+```bash
+streamlit run app.py
+```
+
+### Google Colab
+
+Open `notebooks/colab_train.ipynb` in Colab Pro and run all cells. Training takes ~2-3 hours on a T4 GPU.
+
+## Training Details
+
+- **Optimizer**: AdamW (lr=3e-4, betas=(0.9, 0.98), weight_decay=0.01)
