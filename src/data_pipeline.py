@@ -38,3 +38,22 @@ EMOJI_RE = re.compile(
     "\U0001FA70-\U0001FAFF"  # symbols extended-A
     "]+",
     flags=re.UNICODE,
+)
+MULTI_SPACE_RE = re.compile(r"\s+")
+
+
+def load_config(config_path: str = "configs/config.yaml") -> dict:
+    """Load the YAML configuration file."""
+    with open(config_path, "r") as f:
+        return yaml.safe_load(f)
+
+
+def normalize_text(text: str) -> str:
+    """Lowercase, strip URLs/handles/hashtags/emojis, normalize whitespace."""
+    text = text.lower()
+    text = URL_RE.sub("", text)
+    text = HANDLE_RE.sub("", text)
+    text = HASHTAG_RE.sub("", text)
+    text = EMOJI_RE.sub("", text)
+    # Normalize unicode (e.g. combining characters)
+    text = unicodedata.normalize("NFKC", text)
