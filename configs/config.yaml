@@ -60,3 +60,7 @@ inference:
 evaluation:
   monitor_sentences:
     - "I am going home"
+    - "Are you crazy?"
+    - "Let's meet tomorrow"
+    - "What is your name?"
+    - "I don't understand this"
