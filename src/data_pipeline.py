@@ -154,3 +154,13 @@ def run_pipeline(config: dict | None = None) -> tuple[pd.DataFrame, pd.DataFrame
 
     train_df = df.iloc[:train_end].reset_index(drop=True)
     val_df = df.iloc[train_end:val_end].reset_index(drop=True)
+    test_df = df.iloc[val_end:].reset_index(drop=True)
+
+    print(f"[data] Split sizes — train: {len(train_df):,}  val: {len(val_df):,}  test: {len(test_df):,}")
+
+    # ------------------------------------------------------------------
+    # 8. Save CSVs
+    # ------------------------------------------------------------------
+    train_df.to_csv(data_dir / "train.csv", index=False)
+    val_df.to_csv(data_dir / "val.csv", index=False)
+    test_df.to_csv(data_dir / "test.csv", index=False)
