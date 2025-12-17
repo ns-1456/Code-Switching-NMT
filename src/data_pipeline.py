@@ -136,3 +136,8 @@ def run_pipeline(config: dict | None = None) -> tuple[pd.DataFrame, pd.DataFrame
     ]
     print(f"[data] After length filter ({min_w}-{max_w} words): {len(df):,} (dropped {before - len(df):,})")
 
+    # ------------------------------------------------------------------
+    # 6. Deduplication
+    # ------------------------------------------------------------------
+    before = len(df)
+    df = df.drop_duplicates(subset=["en", "hi_ng"])
