@@ -141,3 +141,16 @@ def run_pipeline(config: dict | None = None) -> tuple[pd.DataFrame, pd.DataFrame
     # ------------------------------------------------------------------
     before = len(df)
     df = df.drop_duplicates(subset=["en", "hi_ng"])
+    print(f"[data] After dedup: {len(df):,} (dropped {before - len(df):,})")
+
+    # ------------------------------------------------------------------
+    # 7. Shuffle and split 90/5/5
+    # ------------------------------------------------------------------
+    df = df.sample(frac=1, random_state=data_cfg["seed"]).reset_index(drop=True)
+
+    n = len(df)
+    train_end = int(n * data_cfg["train_ratio"])
+    val_end = train_end + int(n * data_cfg["val_ratio"])
+
+    train_df = df.iloc[:train_end].reset_index(drop=True)
+    val_df = df.iloc[train_end:val_end].reset_index(drop=True)
