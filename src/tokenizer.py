@@ -97,3 +97,25 @@ def load_tokenizer(config: dict | None = None) -> PreTrainedTokenizerFast:
             f"Tokenizer not found at {save_dir}. Run train_tokenizer() first."
         )
 
+    return _load_fast_tokenizer(save_dir, tok_cfg)
+
+
+def _load_fast_tokenizer(
+    save_dir: Path, tok_cfg: dict
+) -> PreTrainedTokenizerFast:
+    """Wrap the ByteLevelBPE files in a PreTrainedTokenizerFast."""
+    vocab_path = save_dir / "vocab.json"
+    merges_path = save_dir / "merges.txt"
+
+    backend = ByteLevelBPETokenizer(str(vocab_path), str(merges_path))
+    tokenizer = PreTrainedTokenizerFast(
+        tokenizer_object=backend,
+        pad_token=tok_cfg["special_tokens"]["pad"],
+        bos_token=tok_cfg["special_tokens"]["sos"],
+        eos_token=tok_cfg["special_tokens"]["eos"],
+        unk_token=tok_cfg["special_tokens"]["unk"],
+    )
+    return tokenizer
+
+
+def encode(text: str, tokenizer: PreTrainedTokenizerFast) -> list[int]:
