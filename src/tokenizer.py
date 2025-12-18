@@ -76,3 +76,24 @@ def train_tokenizer(config: dict | None = None) -> PreTrainedTokenizerFast:
 
     # Save raw tokenizer files
     bpe.save_model(str(save_dir))
+    print(f"[tokenizer] Saved vocab.json + merges.txt to {save_dir}/")
+
+    # Wrap with PreTrainedTokenizerFast
+    tokenizer = _load_fast_tokenizer(save_dir, tok_cfg)
+    print(f"[tokenizer] Vocab size: {tokenizer.vocab_size}")
+    return tokenizer
+
+
+def load_tokenizer(config: dict | None = None) -> PreTrainedTokenizerFast:
+    """Load a previously trained tokenizer from disk."""
+    if config is None:
+        config = load_config()
+
+    tok_cfg = config["tokenizer"]
+    save_dir = Path(tok_cfg["save_dir"])
+
+    if not (save_dir / "vocab.json").exists():
+        raise FileNotFoundError(
+            f"Tokenizer not found at {save_dir}. Run train_tokenizer() first."
+        )
+
