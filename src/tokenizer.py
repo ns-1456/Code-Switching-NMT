@@ -119,3 +119,21 @@ def _load_fast_tokenizer(
 
 
 def encode(text: str, tokenizer: PreTrainedTokenizerFast) -> list[int]:
+    """Encode a single string into token IDs."""
+    return tokenizer.encode(text)
+
+
+def decode(ids: list[int], tokenizer: PreTrainedTokenizerFast) -> str:
+    """Decode token IDs back into a string."""
+    return tokenizer.decode(ids, skip_special_tokens=True)
+
+
+if __name__ == "__main__":
+    tok = train_tokenizer()
+
+    # Quick smoke test
+    test_sentences = [
+        "I am going home",
+        "kal milte hai",
+        "let's go to the market bhaiya",
+    ]
