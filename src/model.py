@@ -30,3 +30,23 @@ import yaml
 def load_config(config_path: str = "configs/config.yaml") -> dict:
     with open(config_path, "r") as f:
         return yaml.safe_load(f)
+
+
+# ======================================================================
+# Positional Encoding (Sinusoidal — Vaswani et al.)
+# ======================================================================
+
+class PositionalEncoding(nn.Module):
+    """
+    Adds sinusoidal positional embeddings to token embeddings.
+
+    PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))
+    PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))
+
+    Dynamically extends the buffer if the input sequence is longer than
+    the pre-allocated buffer (handles any checkpoint / config mismatch).
+    """
+
+    def __init__(self, d_model: int, max_len: int = 5000, dropout: float = 0.1):
+        super().__init__()
+        self.dropout = nn.Dropout(p=dropout)
