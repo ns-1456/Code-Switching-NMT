@@ -107,3 +107,9 @@ def scaled_dot_product_attention(
         output: (batch, heads, seq_q, d_v)
         attn_weights: (batch, heads, seq_q, seq_k)
     """
+    d_k = query.size(-1)
+    scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)
+
+    if mask is not None:
+        scores = scores.masked_fill(mask, float("-inf"))
+
