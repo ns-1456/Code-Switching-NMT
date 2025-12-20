@@ -80,3 +80,23 @@ class PositionalEncoding(nn.Module):
         if seq_len > self.pe.size(1):
             self.pe = self._build_pe(seq_len + 64, self.d_model).to(x.device)
 
+        x = x + self.pe[:, :seq_len, :]
+        return self.dropout(x)
+
+
+# ======================================================================
+# Scaled Dot-Product Attention
+# ======================================================================
+
+def scaled_dot_product_attention(
+    query: torch.Tensor,
+    key: torch.Tensor,
+    value: torch.Tensor,
+    mask: torch.Tensor | None = None,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """
+    Compute scaled dot-product attention.
+
+    Args:
+        query: (batch, heads, seq_q, d_k)
+        key:   (batch, heads, seq_k, d_k)
