@@ -124,3 +124,14 @@ def scaled_dot_product_attention(
 
 class MultiHeadAttention(nn.Module):
     """
+    Multi-Head Attention with separate Q, K, V projections.
+
+    Splits d_model into num_heads parallel attention heads, each with
+    dimension d_k = d_model // num_heads.
+    """
+
+    def __init__(self, d_model: int, num_heads: int, dropout: float = 0.1):
+        super().__init__()
+        assert d_model % num_heads == 0, "d_model must be divisible by num_heads"
+
+        self.d_model = d_model
