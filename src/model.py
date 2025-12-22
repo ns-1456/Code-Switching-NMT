@@ -208,3 +208,27 @@ class FeedForward(nn.Module):
 # Encoder Layer (Pre-Norm)
 # ======================================================================
 
+class EncoderLayer(nn.Module):
+    """
+    Single encoder layer: Self-Attention + FFN, with pre-norm and residuals.
+
+    Pre-norm (LayerNorm before sublayer) is more stable for training
+    compared to post-norm (original Vaswani).
+    """
+
+    def __init__(self, d_model: int, num_heads: int, d_ff: int, dropout: float = 0.1):
+        super().__init__()
+        self.self_attn = MultiHeadAttention(d_model, num_heads, dropout)
+        self.ffn = FeedForward(d_model, d_ff, dropout)
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+        self.dropout1 = nn.Dropout(p=dropout)
+        self.dropout2 = nn.Dropout(p=dropout)
+
+    def forward(self, src: torch.Tensor, src_mask: torch.Tensor | None = None) -> torch.Tensor:
+        """
+        Args:
+            src: (batch, src_len, d_model)
+            src_mask: (batch, 1, 1, src_len) padding mask
+        """
+        # Pre-norm self-attention
