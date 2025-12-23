@@ -248,3 +248,25 @@ class EncoderLayer(nn.Module):
 # Decoder Layer (Pre-Norm)
 # ======================================================================
 
+class DecoderLayer(nn.Module):
+    """
+    Single decoder layer: Masked Self-Attention + Cross-Attention + FFN,
+    with pre-norm and residuals.
+    """
+
+    def __init__(self, d_model: int, num_heads: int, d_ff: int, dropout: float = 0.1):
+        super().__init__()
+        self.self_attn = MultiHeadAttention(d_model, num_heads, dropout)
+        self.cross_attn = MultiHeadAttention(d_model, num_heads, dropout)
+        self.ffn = FeedForward(d_model, d_ff, dropout)
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+        self.norm3 = nn.LayerNorm(d_model)
+        self.dropout1 = nn.Dropout(p=dropout)
+        self.dropout2 = nn.Dropout(p=dropout)
+        self.dropout3 = nn.Dropout(p=dropout)
+
+    def forward(
+        self,
+        tgt: torch.Tensor,
+        enc_output: torch.Tensor,
