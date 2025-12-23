@@ -270,3 +270,28 @@ class DecoderLayer(nn.Module):
         self,
         tgt: torch.Tensor,
         enc_output: torch.Tensor,
+        tgt_mask: torch.Tensor | None = None,
+        src_mask: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        """
+        Args:
+            tgt: (batch, tgt_len, d_model)
+            enc_output: (batch, src_len, d_model)
+            tgt_mask: (batch, 1, tgt_len, tgt_len) causal + padding mask
+            src_mask: (batch, 1, 1, src_len) padding mask for encoder output
+        """
+        # Pre-norm masked self-attention
+        _tgt = self.norm1(tgt)
+        _tgt = self.self_attn(_tgt, _tgt, _tgt, mask=tgt_mask)
+        tgt = tgt + self.dropout1(_tgt)
+
+        # Pre-norm cross-attention (query from decoder, key/value from encoder)
+        _tgt = self.norm2(tgt)
+        _tgt = self.cross_attn(_tgt, enc_output, enc_output, mask=src_mask)
+        tgt = tgt + self.dropout2(_tgt)
+
+        # Pre-norm feed-forward
+        _tgt = self.norm3(tgt)
+        _tgt = self.ffn(_tgt)
+        tgt = tgt + self.dropout3(_tgt)
+
