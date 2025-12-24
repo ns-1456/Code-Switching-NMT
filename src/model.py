@@ -343,3 +343,16 @@ class Encoder(nn.Module):
 # ======================================================================
 # Decoder Stack
 # ======================================================================
+
+class Decoder(nn.Module):
+    """Stack of N decoder layers with shared token embedding + positional encoding."""
+
+    def __init__(
+        self,
+        vocab_size: int,
+        d_model: int,
+        num_heads: int,
+        d_ff: int,
+        num_layers: int,
+        max_len: int,
+        dropout: float = 0.1,
