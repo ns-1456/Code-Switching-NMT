@@ -320,3 +320,26 @@ class Encoder(nn.Module):
         # Use a generous PE buffer (512) — it's a non-trainable buffer, costs nothing
         self.pos_encoding = PositionalEncoding(d_model, max(max_len * 4, 512), dropout)
         self.layers = nn.ModuleList(
+            [EncoderLayer(d_model, num_heads, d_ff, dropout) for _ in range(num_layers)]
+        )
+        self.norm = nn.LayerNorm(d_model)  # Final norm (pre-norm architecture)
+        self.d_model = d_model
+
+    def forward(self, src: torch.Tensor, src_mask: torch.Tensor | None = None) -> torch.Tensor:
+        """
+        Args:
+            src: (batch, src_len) token IDs
+            src_mask: (batch, 1, 1, src_len)
+        Returns:
+            (batch, src_len, d_model)
+        """
+        x = self.embedding(src) * math.sqrt(self.d_model)
+        x = self.pos_encoding(x)
+        for layer in self.layers:
+            x = layer(x, src_mask)
+        return self.norm(x)
+
+
+# ======================================================================
+# Decoder Stack
+# ======================================================================
