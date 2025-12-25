@@ -432,3 +432,15 @@ class Seq2SeqTransformer(nn.Module):
         )
 
         self.decoder = Decoder(
+            vocab_size=tgt_vocab_size,
+            d_model=d_model,
+            num_heads=num_heads,
+            d_ff=d_ff,
+            num_layers=num_decoder_layers,
+            max_len=max_len,
+            dropout=dropout,
+        )
+
+        # Output projection: d_model -> vocab_size
+        self.generator = nn.Linear(d_model, tgt_vocab_size)
+
