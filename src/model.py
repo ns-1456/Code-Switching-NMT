@@ -444,3 +444,15 @@ class Seq2SeqTransformer(nn.Module):
         # Output projection: d_model -> vocab_size
         self.generator = nn.Linear(d_model, tgt_vocab_size)
 
+        # Initialize weights (Xavier uniform — standard for transformers)
+        self._init_weights()
+
+    def _init_weights(self):
+        """Xavier uniform initialization for all parameters."""
+        for p in self.parameters():
+            if p.dim() > 1:
+                nn.init.xavier_uniform_(p)
+
+    def forward(
+        self,
+        src: torch.Tensor,
