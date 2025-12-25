@@ -456,3 +456,21 @@ class Seq2SeqTransformer(nn.Module):
     def forward(
         self,
         src: torch.Tensor,
+        tgt: torch.Tensor,
+        src_mask: torch.Tensor | None = None,
+        tgt_mask: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        """
+        Args:
+            src: (batch, src_len) source token IDs
+            tgt: (batch, tgt_len) target token IDs (shifted right)
+            src_mask: (batch, 1, 1, src_len) padding mask
+            tgt_mask: (batch, 1, tgt_len, tgt_len) causal + padding mask
+
+        Returns:
+            logits: (batch, tgt_len, tgt_vocab_size)
+        """
+        enc_output = self.encoder(src, src_mask)
+        dec_output = self.decoder(tgt, enc_output, tgt_mask, src_mask)
+        logits = self.generator(dec_output)
+        return logits
