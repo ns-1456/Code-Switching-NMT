@@ -571,3 +571,28 @@ def build_model(config: dict | None = None, vocab_size: int | None = None) -> Se
         vocab_size: override vocab_size (if tokenizer is already trained)
 
     Returns:
+        Seq2SeqTransformer instance
+    """
+    if config is None:
+        config = load_config()
+
+    m = config["model"]
+    tok_cfg = config["tokenizer"]
+
+    vs = vocab_size if vocab_size is not None else tok_cfg["vocab_size"]
+
+    model = Seq2SeqTransformer(
+        src_vocab_size=vs,
+        tgt_vocab_size=vs,
+        d_model=m["d_model"],
+        num_heads=m["num_heads"],
+        num_encoder_layers=m["num_encoder_layers"],
+        num_decoder_layers=m["num_decoder_layers"],
+        d_ff=m["d_ff"],
+        max_len=m["max_seq_len"],
+        dropout=m["dropout"],
+        pad_idx=0,  # <pad> is token 0
+    )
+    return model
+
+
