@@ -512,3 +512,17 @@ def create_padding_mask(seq: torch.Tensor, pad_idx: int) -> torch.Tensor:
 
     Args:
         seq: (batch, seq_len) token IDs
+        pad_idx: the padding token index
+
+    Returns:
+        (batch, 1, 1, seq_len) boolean mask
+    """
+    return (seq == pad_idx).unsqueeze(1).unsqueeze(2)
+
+
+def create_causal_mask(size: int, device: torch.device | None = None) -> torch.Tensor:
+    """
+    Create an upper-triangular causal mask for decoder self-attention.
+    True = position should be masked (cannot attend to future tokens).
+
+    Args:
