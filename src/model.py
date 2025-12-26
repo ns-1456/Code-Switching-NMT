@@ -596,3 +596,18 @@ def build_model(config: dict | None = None, vocab_size: int | None = None) -> Se
     return model
 
 
+# ======================================================================
+# Main — print model summary
+# ======================================================================
+
+if __name__ == "__main__":
+    model = build_model()
+    total_params = sum(p.numel() for p in model.parameters())
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+    print(f"Seq2SeqTransformer")
+    print(f"  Total parameters:     {total_params:,}")
+    print(f"  Trainable parameters: {trainable_params:,}")
+    print(f"  Estimated size:       {total_params * 4 / 1024 / 1024:.1f} MB (fp32)")
+    print()
+    print(model)
