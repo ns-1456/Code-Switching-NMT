@@ -60,3 +60,18 @@ class TranslationDataset(Dataset):
     ):
         self.df = pd.read_csv(csv_path)
         self.tokenizer = tokenizer
+        self.max_len = max_len
+        self.sos_id = sos_id
+        self.eos_id = eos_id
+
+    def __len__(self) -> int:
+        return len(self.df)
+
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
+        row = self.df.iloc[idx]
+        en_text = str(row["en"])
+        hi_text = str(row["hi_ng"])
+
+        # Encode (without special tokens — we add them manually)
+        src_ids = self.tokenizer.encode(en_text, add_special_tokens=False)
+        tgt_ids = self.tokenizer.encode(hi_text, add_special_tokens=False)
