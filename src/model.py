@@ -556,3 +556,18 @@ def create_tgt_mask(
     padding = create_padding_mask(tgt, pad_idx)
     # Combine: masked if either is True
     return causal | padding
+
+
+# ======================================================================
+# Model factory
+# ======================================================================
+
+def build_model(config: dict | None = None, vocab_size: int | None = None) -> Seq2SeqTransformer:
+    """
+    Build a Seq2SeqTransformer from config.yaml settings.
+
+    Args:
+        config: parsed YAML config dict
+        vocab_size: override vocab_size (if tokenizer is already trained)
+
+    Returns:
