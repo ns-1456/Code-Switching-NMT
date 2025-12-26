@@ -35,3 +35,28 @@ from src.model import (
     build_model,
     create_padding_mask,
     create_tgt_mask,
+    load_config,
+)
+from src.tokenizer import load_tokenizer
+
+
+# ======================================================================
+# Dataset
+# ======================================================================
+
+class TranslationDataset(Dataset):
+    """
+    Reads a CSV with 'en' and 'hi_ng' columns and tokenizes on-the-fly.
+    Each item returns (src_ids, tgt_ids) as 1-D LongTensors.
+    """
+
+    def __init__(
+        self,
+        csv_path: str | Path,
+        tokenizer,
+        max_len: int = 64,
+        sos_id: int = 1,
+        eos_id: int = 2,
+    ):
+        self.df = pd.read_csv(csv_path)
+        self.tokenizer = tokenizer
