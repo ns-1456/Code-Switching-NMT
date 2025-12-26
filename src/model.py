@@ -535,3 +535,24 @@ def create_causal_mask(size: int, device: torch.device | None = None) -> torch.T
     mask = torch.triu(torch.ones(size, size, device=device), diagonal=1).bool()
     return mask.unsqueeze(0).unsqueeze(0)
 
+
+def create_tgt_mask(
+    tgt: torch.Tensor, pad_idx: int
+) -> torch.Tensor:
+    """
+    Create combined causal + padding mask for decoder self-attention.
+
+    Args:
+        tgt: (batch, tgt_len) target token IDs
+        pad_idx: padding token index
+
+    Returns:
+        (batch, 1, tgt_len, tgt_len) boolean mask
+    """
+    tgt_len = tgt.size(1)
+    # Causal mask: (1, 1, tgt_len, tgt_len)
+    causal = create_causal_mask(tgt_len, device=tgt.device)
+    # Padding mask: (batch, 1, 1, tgt_len) -> broadcast to (batch, 1, tgt_len, tgt_len)
+    padding = create_padding_mask(tgt, pad_idx)
+    # Combine: masked if either is True
+    return causal | padding
