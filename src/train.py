@@ -170,3 +170,14 @@ def qualitative_check(
 ):
     """
     Translate a fixed set of sentences using greedy decoding and print results.
+    Used to monitor training quality every epoch.
+    """
+    model.eval()
+    print("\n  --- Qualitative Check ---")
+
+    for sent in sentences:
+        src_ids = tokenizer.encode(sent, add_special_tokens=False)
+        src_ids = [sos_id] + src_ids + [eos_id]
+        src = torch.tensor([src_ids], dtype=torch.long, device=device)
+        src_mask = create_padding_mask(src, pad_idx)
+
