@@ -104,3 +104,17 @@ def collate_fn(batch: list[tuple[torch.Tensor, torch.Tensor]], pad_idx: int = 0)
     src_padded = nn.utils.rnn.pad_sequence(src_seqs, batch_first=True, padding_value=pad_idx)
     tgt_padded = nn.utils.rnn.pad_sequence(tgt_seqs, batch_first=True, padding_value=pad_idx)
 
+    return src_padded, tgt_padded
+
+
+# ======================================================================
+# Learning Rate Scheduler (Warmup + Cosine Decay)
+# ======================================================================
+
+class WarmupCosineScheduler:
+    """
+    Warmup for `warmup_steps`, then cosine-decay to `min_lr`.
+    """
+
+    def __init__(
+        self,
