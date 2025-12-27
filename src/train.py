@@ -83,3 +83,24 @@ class TranslationDataset(Dataset):
         # Add <sos> and <eos>
         src_ids = [self.sos_id] + src_ids + [self.eos_id]
         tgt_ids = [self.sos_id] + tgt_ids + [self.eos_id]
+
+        return torch.tensor(src_ids, dtype=torch.long), torch.tensor(tgt_ids, dtype=torch.long)
+
+
+# ======================================================================
+# Collate Function
+# ======================================================================
+
+def collate_fn(batch: list[tuple[torch.Tensor, torch.Tensor]], pad_idx: int = 0):
+    """
+    Pads src and tgt sequences to the max length in the batch.
+
+    Returns:
+        src: (batch, max_src_len)
+        tgt: (batch, max_tgt_len)
+    """
+    src_seqs, tgt_seqs = zip(*batch)
+
+    src_padded = nn.utils.rnn.pad_sequence(src_seqs, batch_first=True, padding_value=pad_idx)
+    tgt_padded = nn.utils.rnn.pad_sequence(tgt_seqs, batch_first=True, padding_value=pad_idx)
+
