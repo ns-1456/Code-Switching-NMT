@@ -292,3 +292,14 @@ def train(config: dict | None = None):
     total_steps = len(train_loader) * train_cfg["num_epochs"]
     scheduler = WarmupCosineScheduler(
         optimizer,
+        warmup_steps=train_cfg["warmup_steps"],
+        total_steps=total_steps,
+        max_lr=train_cfg["learning_rate"],
+    )
+
+    criterion = nn.CrossEntropyLoss(
+        ignore_index=pad_idx,
+        label_smoothing=train_cfg["label_smoothing"],
+    )
+
+    # ------------------------------------------------------------------
