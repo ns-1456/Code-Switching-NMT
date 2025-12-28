@@ -221,3 +221,18 @@ def train(config: dict | None = None):
     model_cfg = config["model"]
     train_cfg = config["training"]
     eval_cfg = config["evaluation"]
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"[train] Device: {device}")
+
+    # ------------------------------------------------------------------
+    # Load tokenizer
+    # ------------------------------------------------------------------
+    tokenizer = load_tokenizer(config)
+    pad_idx = tokenizer.pad_token_id  # 0
+    sos_id = tokenizer.bos_token_id   # 1
+    eos_id = tokenizer.eos_token_id   # 2
+    vocab_size = tokenizer.vocab_size
+
+    print(f"[train] Vocab size: {vocab_size}")
+
