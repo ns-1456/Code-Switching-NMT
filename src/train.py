@@ -270,3 +270,25 @@ def train(config: dict | None = None):
         collate_fn=collate,
     )
 
+    # ------------------------------------------------------------------
+    # Build model
+    # ------------------------------------------------------------------
+    model = build_model(config, vocab_size=vocab_size)
+    model = model.to(device)
+
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f"[train] Model parameters: {total_params:,}")
+
+    # ------------------------------------------------------------------
+    # Optimizer + Scheduler + Loss
+    # ------------------------------------------------------------------
+    optimizer = torch.optim.AdamW(
+        model.parameters(),
+        lr=train_cfg["learning_rate"],
+        betas=tuple(train_cfg["betas"]),
+        weight_decay=train_cfg["weight_decay"],
+    )
+
+    total_steps = len(train_loader) * train_cfg["num_epochs"]
+    scheduler = WarmupCosineScheduler(
+        optimizer,
