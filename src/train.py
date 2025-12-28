@@ -261,3 +261,12 @@ def train(config: dict | None = None):
         collate_fn=collate,
         drop_last=True,
     )
+    val_loader = DataLoader(
+        val_ds,
+        batch_size=train_cfg["batch_size"],
+        shuffle=False,
+        num_workers=train_cfg["num_workers"],
+        pin_memory=True,
+        collate_fn=collate,
+    )
+
