@@ -379,3 +379,27 @@ def train(config: dict | None = None):
 
                 logits = model(src, tgt_input, src_mask, tgt_mask)
                 loss = criterion(
+                    logits.reshape(-1, logits.size(-1)),
+                    tgt_output.reshape(-1),
+                )
+
+                val_loss += loss.item()
+                val_batches += 1
+
+        avg_val_loss = val_loss / max(1, val_batches)
+        elapsed = time.time() - epoch_start
+
+        print(
+            f"\n  Epoch {epoch}: train_loss={avg_train_loss:.4f}  "
+            f"val_loss={avg_val_loss:.4f}  time={elapsed:.1f}s  "
+            f"lr={scheduler.get_lr():.2e}"
+        )
+
+        # --- Qualitative check ---
+        qualitative_check(
+            model, tokenizer, monitor_sentences, device,
+            max_len=model_cfg["max_seq_len"],
+            sos_id=sos_id, eos_id=eos_id, pad_idx=pad_idx,
+        )
+
+        # --- Checkpoint ---
