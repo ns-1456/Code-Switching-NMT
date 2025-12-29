@@ -339,3 +339,24 @@ def train(config: dict | None = None):
             src_mask = create_padding_mask(src, pad_idx)
             tgt_mask = create_tgt_mask(tgt_input, pad_idx)
 
+            # Forward
+            logits = model(src, tgt_input, src_mask, tgt_mask)
+
+            # Reshape for loss: (batch * tgt_len, vocab_size) vs (batch * tgt_len,)
+            loss = criterion(
+                logits.reshape(-1, logits.size(-1)),
+                tgt_output.reshape(-1),
+            )
+
+            # Backward
+            optimizer.zero_grad()
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), train_cfg["max_grad_norm"])
+            optimizer.step()
+            scheduler.step()
+
+            train_loss += loss.item()
+            num_batches += 1
+            pbar.set_postfix(loss=f"{loss.item():.4f}", lr=f"{scheduler.get_lr():.2e}")
+
+        avg_train_loss = train_loss / max(1, num_batches)
