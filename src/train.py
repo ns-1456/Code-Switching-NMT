@@ -371,3 +371,11 @@ def train(config: dict | None = None):
                 src = src.to(device)
                 tgt = tgt.to(device)
 
+                tgt_input = tgt[:, :-1]
+                tgt_output = tgt[:, 1:]
+
+                src_mask = create_padding_mask(src, pad_idx)
+                tgt_mask = create_tgt_mask(tgt_input, pad_idx)
+
+                logits = model(src, tgt_input, src_mask, tgt_mask)
+                loss = criterion(
