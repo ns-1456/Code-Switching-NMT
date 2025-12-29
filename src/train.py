@@ -360,3 +360,14 @@ def train(config: dict | None = None):
             pbar.set_postfix(loss=f"{loss.item():.4f}", lr=f"{scheduler.get_lr():.2e}")
 
         avg_train_loss = train_loss / max(1, num_batches)
+
+        # --- Validate ---
+        model.eval()
+        val_loss = 0.0
+        val_batches = 0
+
+        with torch.no_grad():
+            for src, tgt in tqdm(val_loader, desc=f"Epoch {epoch}/{train_cfg['num_epochs']} [Val]"):
+                src = src.to(device)
+                tgt = tgt.to(device)
+
