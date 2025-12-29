@@ -403,3 +403,19 @@ def train(config: dict | None = None):
         )
 
         # --- Checkpoint ---
+        if avg_val_loss < best_val_loss:
+            best_val_loss = avg_val_loss
+            patience_counter = 0
+            ckpt_path = ckpt_dir / "best_model.pt"
+            torch.save(
+                {
+                    "epoch": epoch,
+                    "model_state_dict": model.state_dict(),
+                    "optimizer_state_dict": optimizer.state_dict(),
+                    "val_loss": avg_val_loss,
+                    "config": config,
+                },
+                ckpt_path,
+            )
+            print(f"  [checkpoint] Saved best model (val_loss={avg_val_loss:.4f}) to {ckpt_path}")
+        else:
