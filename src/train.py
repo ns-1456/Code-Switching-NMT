@@ -428,3 +428,8 @@ def train(config: dict | None = None):
 
     print(f"\n[train] Training complete. Best val_loss: {best_val_loss:.4f}")
     return model
+
+
+# ======================================================================
+# Main
+# ======================================================================
