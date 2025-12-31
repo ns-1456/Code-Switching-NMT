@@ -37,3 +37,9 @@ def load_model_for_inference(
 ) -> tuple[Seq2SeqTransformer, object, dict]:
     """
     Load a trained model from checkpoint.
+
+    Returns:
+        (model, tokenizer, config)
+    """
+    if device is None:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
