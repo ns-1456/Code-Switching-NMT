@@ -95,3 +95,24 @@ def translate_greedy(
         sos_id, eos_id, pad_idx: special token IDs (auto-detected if None)
 
     Returns:
+        (translated_text, cross_attention_weights)
+    """
+    if sos_id is None:
+        sos_id = tokenizer.bos_token_id
+    if eos_id is None:
+        eos_id = tokenizer.eos_token_id
+    if pad_idx is None:
+        pad_idx = tokenizer.pad_token_id
+
+    model.eval()
+
+    # Encode source
+    src_ids = tokenizer.encode(sentence, add_special_tokens=False)
+    src_ids = [sos_id] + src_ids + [eos_id]
+    src = torch.tensor([src_ids], dtype=torch.long, device=device)
+    src_mask = create_padding_mask(src, pad_idx)
+
+    enc_output = model.encode(src, src_mask)
+
+    # Decode step by step
+    tgt_ids = [sos_id]
