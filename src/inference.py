@@ -71,3 +71,13 @@ def load_model_for_inference(
 
 # ======================================================================
 # Greedy Decoding
+# ======================================================================
+
+def translate_greedy(
+    model: Seq2SeqTransformer,
+    tokenizer,
+    sentence: str,
+    device: torch.device,
+    max_len: int = 64,
+    sos_id: int | None = None,
+    eos_id: int | None = None,
