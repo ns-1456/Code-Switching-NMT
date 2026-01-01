@@ -66,3 +66,8 @@ def load_model_for_inference(
     model.eval()
 
     print(f"[inference] Loaded model from {checkpoint_path} (epoch {checkpoint.get('epoch', '?')})")
+    return model, tokenizer, config
+
+
+# ======================================================================
+# Greedy Decoding
