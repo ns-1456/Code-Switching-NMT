@@ -142,3 +142,27 @@ def translate_greedy(
 
 @dataclass
 class BeamHypothesis:
+    """A single beam hypothesis."""
+    tokens: list[int] = field(default_factory=list)
+    log_prob: float = 0.0
+
+    @property
+    def score(self) -> float:
+        """Length-normalized log probability."""
+        # Add small epsilon to avoid division by zero for empty sequences
+        length = max(1, len(self.tokens))
+        return self.log_prob / length
+
+
+def translate_beam(
+    model: Seq2SeqTransformer,
+    tokenizer,
+    sentence: str,
+    device: torch.device,
+    beam_width: int = 5,
+    max_len: int = 64,
+    length_penalty: float = 1.0,
+    sos_id: int | None = None,
+    eos_id: int | None = None,
+    pad_idx: int | None = None,
+) -> tuple[str, list[torch.Tensor]]:
