@@ -166,3 +166,17 @@ def translate_beam(
     eos_id: int | None = None,
     pad_idx: int | None = None,
 ) -> tuple[str, list[torch.Tensor]]:
+    """
+    Beam search decoding: keep top-k hypotheses at each step.
+
+    Args:
+        model: trained Seq2SeqTransformer
+        tokenizer: trained tokenizer
+        sentence: English input sentence
+        device: torch device
+        beam_width: number of beams to keep
+        max_len: maximum output length
+        length_penalty: penalty factor for length normalization
+        sos_id, eos_id, pad_idx: special token IDs
+
+    Returns:
