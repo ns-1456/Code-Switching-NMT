@@ -116,3 +116,10 @@ def translate_greedy(
 
     # Decode step by step
     tgt_ids = [sos_id]
+    for _ in range(max_len):
+        tgt = torch.tensor([tgt_ids], dtype=torch.long, device=device)
+        tgt_mask = create_tgt_mask(tgt, pad_idx)
+
+        dec_output = model.decode(tgt, enc_output, tgt_mask, src_mask)
+        logits = model.generator(dec_output[:, -1, :])
+        next_token = logits.argmax(dim=-1).item()
