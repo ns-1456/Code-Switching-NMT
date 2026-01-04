@@ -202,3 +202,16 @@ def translate_beam(
     # Initialize beams
     beams: list[BeamHypothesis] = [BeamHypothesis(tokens=[sos_id], log_prob=0.0)]
     completed: list[BeamHypothesis] = []
+
+    for step in range(max_len):
+        all_candidates: list[BeamHypothesis] = []
+
+        for beam in beams:
+            # If this beam already ended, skip
+            if beam.tokens[-1] == eos_id:
+                completed.append(beam)
+                continue
+
+            tgt = torch.tensor([beam.tokens], dtype=torch.long, device=device)
+            tgt_mask = create_tgt_mask(tgt, pad_idx)
+
