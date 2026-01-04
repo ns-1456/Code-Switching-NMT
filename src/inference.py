@@ -180,3 +180,13 @@ def translate_beam(
         sos_id, eos_id, pad_idx: special token IDs
 
     Returns:
+        (translated_text, cross_attention_weights)
+    """
+    if sos_id is None:
+        sos_id = tokenizer.bos_token_id
+    if eos_id is None:
+        eos_id = tokenizer.eos_token_id
+    if pad_idx is None:
+        pad_idx = tokenizer.pad_token_id
+
+    model.eval()
