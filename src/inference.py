@@ -294,3 +294,25 @@ def batch_translate_greedy(
     Args:
         model: trained Seq2SeqTransformer
         tokenizer: trained tokenizer
+        sentences: list of English input sentences
+        device: torch device
+        max_len: maximum output length
+        batch_size: number of sentences to process at once
+        sos_id, eos_id, pad_idx: special token IDs
+
+    Returns:
+        list of translated strings (same order as input)
+    """
+    if sos_id is None:
+        sos_id = tokenizer.bos_token_id
+    if eos_id is None:
+        eos_id = tokenizer.eos_token_id
+    if pad_idx is None:
+        pad_idx = tokenizer.pad_token_id
+
+    model.eval()
+    all_outputs: list[str] = []
+
+    for batch_start in range(0, len(sentences), batch_size):
+        batch_sents = sentences[batch_start : batch_start + batch_size]
+        bsz = len(batch_sents)
