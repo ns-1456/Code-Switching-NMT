@@ -341,3 +341,26 @@ def batch_translate_greedy(
         finished = torch.zeros(bsz, dtype=torch.bool, device=device)
 
         for _ in range(max_len):
+            tgt_mask = create_tgt_mask(tgt_ids, pad_idx)
+
+            with torch.no_grad():
+                dec_output = model.decode(tgt_ids, enc_output, tgt_mask, src_mask)
+                logits = model.generator(dec_output[:, -1, :])  # (bsz, vocab)
+
+            next_tokens = logits.argmax(dim=-1)  # (bsz,)
+
+            # Force pad for already-finished sequences
+            next_tokens[finished] = pad_idx
+
+            # Check which sequences just hit <eos>
+            finished = finished | (next_tokens == eos_id)
+
+            tgt_ids = torch.cat([tgt_ids, next_tokens.unsqueeze(1)], dim=1)
+
+            if finished.all():
+                break
+
+        # --- Decode each output ---
+        for i in range(bsz):
+            ids = tgt_ids[i, 1:].tolist()  # skip <sos>
+            # Truncate at first <eos> or <pad>
