@@ -323,3 +323,10 @@ def batch_translate_greedy(
         for sent in batch_sents:
             ids = tokenizer.encode(sent, add_special_tokens=False)
             src_id_lists.append([sos_id] + ids + [eos_id])
+
+        # Pad to max length in batch
+        max_src = max(len(ids) for ids in src_id_lists)
+        src_padded = torch.full((bsz, max_src), pad_idx, dtype=torch.long, device=device)
+        for i, ids in enumerate(src_id_lists):
+            src_padded[i, : len(ids)] = torch.tensor(ids, dtype=torch.long)
+
