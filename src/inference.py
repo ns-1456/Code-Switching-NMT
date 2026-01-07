@@ -405,3 +405,15 @@ def translate(
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     if model is None or tokenizer is None:
+        model, tokenizer, config = load_model_for_inference(device=device)
+
+    if method == "greedy":
+        text, _ = translate_greedy(model, tokenizer, sentence, device)
+    else:
+        text, _ = translate_beam(model, tokenizer, sentence, device, beam_width=beam_width)
+
+    return text
+
+
+# ======================================================================
+# Main
