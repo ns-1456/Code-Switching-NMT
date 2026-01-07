@@ -383,3 +383,25 @@ def translate(
     model: Seq2SeqTransformer | None = None,
     tokenizer=None,
     config: dict | None = None,
+    device: torch.device | None = None,
+    method: str = "beam",
+    beam_width: int = 5,
+) -> str:
+    """
+    High-level translate function. Loads model if not provided.
+
+    Args:
+        sentence: English input
+        model: optional pre-loaded model
+        tokenizer: optional pre-loaded tokenizer
+        config: optional config dict
+        method: 'greedy' or 'beam'
+        beam_width: beam width for beam search
+
+    Returns:
+        Hinglish translation string
+    """
+    if device is None:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    if model is None or tokenizer is None:
