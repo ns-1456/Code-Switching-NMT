@@ -364,3 +364,22 @@ def batch_translate_greedy(
         for i in range(bsz):
             ids = tgt_ids[i, 1:].tolist()  # skip <sos>
             # Truncate at first <eos> or <pad>
+            clean_ids = []
+            for tid in ids:
+                if tid == eos_id or tid == pad_idx:
+                    break
+                clean_ids.append(tid)
+            all_outputs.append(tokenizer.decode(clean_ids, skip_special_tokens=True))
+
+    return all_outputs
+
+
+# ======================================================================
+# Convenience wrapper
+# ======================================================================
+
+def translate(
+    sentence: str,
+    model: Seq2SeqTransformer | None = None,
+    tokenizer=None,
+    config: dict | None = None,
