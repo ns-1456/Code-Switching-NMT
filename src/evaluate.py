@@ -88,3 +88,17 @@ def evaluate_test_set(
         "chrf": chrf,
         "predictions": list(zip(sources, predictions, references)),
     }
+
+
+# ======================================================================
+# Qualitative "Vibe Check"
+# ======================================================================
+
+VIBE_CHECK_SENTENCES = [
+    "I am going home",
+    "Are you crazy?",
+    "Let's meet tomorrow",
+    "What is your name?",
+    "I don't understand this",
+    "Please give me some water",
+    "Where is the nearest hospital?",
