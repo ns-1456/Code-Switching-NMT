@@ -35,3 +35,25 @@ def evaluate_test_set(
     tokenizer,
     config: dict,
     device: torch.device,
+    method: str = "greedy",
+    beam_width: int = 5,
+    batch_size: int = 128,
+) -> dict:
+    """
+    Evaluate the model on the full test set.
+
+    Uses batched greedy decoding by default (~50-100x faster than
+    one-by-one beam search). Beam search is better reserved for the
+    vibe check where quality matters on a few sentences.
+
+    Returns dict with:
+      - bleu: corpus BLEU score
+      - chrf: chrF score
+      - predictions: list of (source, prediction, reference)
+    """
+    data_dir = Path(config["data"]["data_dir"])
+    test_df = pd.read_csv(data_dir / "test.csv")
+
+    sources = [str(s) for s in test_df["en"].tolist()]
+    references = [str(s) for s in test_df["hi_ng"].tolist()]
+
