@@ -139,3 +139,13 @@ def vibe_check(
     for sent in VIBE_CHECK_SENTENCES:
         if method == "greedy":
             output, _ = translate_greedy(model, tokenizer, sent, device)
+        else:
+            output, _ = translate_beam(
+                model, tokenizer, sent, device, beam_width=beam_width
+            )
+
+        results.append((sent, output))
+        print(f"  EN:  {sent}")
+        print(f"  HI:  {output}")
+        print()
+
