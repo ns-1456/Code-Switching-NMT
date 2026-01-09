@@ -149,3 +149,17 @@ def vibe_check(
         print(f"  HI:  {output}")
         print()
 
+    return results
+
+
+# ======================================================================
+# Save Report
+# ======================================================================
+
+def save_report(
+    eval_results: dict,
+    vibe_results: list[tuple[str, str]],
+    output_path: str = "results/eval_report.txt",
+):
+    """Save evaluation results to a text file."""
+    out = Path(output_path)
