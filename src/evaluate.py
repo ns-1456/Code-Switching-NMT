@@ -115,3 +115,27 @@ VIBE_CHECK_SENTENCES = [
     "The weather is very nice today",
     "I forgot my wallet at home",
     "We should leave now",
+]
+
+
+def vibe_check(
+    model,
+    tokenizer,
+    device: torch.device,
+    method: str = "beam",
+    beam_width: int = 5,
+) -> list[tuple[str, str]]:
+    """
+    Translate 20 curated sentences and print side-by-side.
+
+    Returns list of (english, hinglish) tuples.
+    """
+    results = []
+
+    print(f"\n{'='*60}")
+    print(f"  QUALITATIVE VIBE CHECK ({method} decoding)")
+    print(f"{'='*60}\n")
+
+    for sent in VIBE_CHECK_SENTENCES:
+        if method == "greedy":
+            output, _ = translate_greedy(model, tokenizer, sent, device)
