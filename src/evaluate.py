@@ -209,3 +209,27 @@ def run_evaluation(
 ):
     """
     Run full evaluation pipeline.
+
+    By default uses fast batched greedy for corpus BLEU/chrF
+    and beam search for the 20-sentence vibe check.
+    """
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model, tokenizer, config = load_model_for_inference(
+        checkpoint_path=checkpoint_path,
+        config_path=config_path,
+        device=device,
+    )
+
+    # Corpus evaluation (fast batched greedy)
+    eval_results = evaluate_test_set(
+        model, tokenizer, config, device,
+        method=corpus_method, beam_width=beam_width,
+        batch_size=batch_size,
+    )
+
+    # Vibe check (beam search — only 20 sentences, quality matters)
+    vibe_results = vibe_check(
+        model, tokenizer, device,
+        method=vibe_method, beam_width=beam_width,
+    )
+
