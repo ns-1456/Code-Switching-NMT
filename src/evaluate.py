@@ -203,3 +203,9 @@ def run_evaluation(
     checkpoint_path: str = "checkpoints/best_model.pt",
     config_path: str = "configs/config.yaml",
     corpus_method: str = "greedy",
+    vibe_method: str = "beam",
+    beam_width: int = 5,
+    batch_size: int = 128,
+):
+    """
+    Run full evaluation pipeline.
