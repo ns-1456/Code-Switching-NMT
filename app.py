@@ -50,3 +50,11 @@ def load_model():
 # ======================================================================
 # Attention Heatmap
 # ======================================================================
+
+def plot_attention_heatmap(
+    attn_weights: list[torch.Tensor],
+    src_tokens: list[str],
+    tgt_tokens: list[str],
+    layer_idx: int = -1,
+):
+    """
