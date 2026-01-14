@@ -131,3 +131,28 @@ def main():
         )
         return
 
+    # Sidebar controls
+    with st.sidebar:
+        st.header("Settings")
+
+        method = st.radio(
+            "Decoding Method",
+            options=["Beam Search", "Greedy"],
+            index=0,
+            help="Beam Search produces better translations but is slower.",
+        )
+
+        beam_width = 5
+        if method == "Beam Search":
+            beam_width = st.slider(
+                "Beam Width",
+                min_value=2,
+                max_value=10,
+                value=5,
+                help="Higher = better quality but slower.",
+            )
+
+        show_attention = st.checkbox(
+            "Show Attention Map",
+            value=True,
+            help="Visualize which source words the model attends to.",
