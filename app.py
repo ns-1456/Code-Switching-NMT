@@ -156,3 +156,14 @@ def main():
             "Show Attention Map",
             value=True,
             help="Visualize which source words the model attends to.",
+        )
+
+        st.divider()
+        st.markdown("**Model Info**")
+        total_params = sum(p.numel() for p in model.parameters())
+        st.markdown(f"- Parameters: `{total_params:,}`")
+        st.markdown(f"- Architecture: `{config['model']['num_encoder_layers']}L Enc / {config['model']['num_decoder_layers']}L Dec`")
+        st.markdown(f"- d_model: `{config['model']['d_model']}`")
+        st.markdown(f"- Device: `{device}`")
+
+    # Input
