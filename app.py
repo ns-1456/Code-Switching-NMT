@@ -231,3 +231,13 @@ def main():
             src_ids = tokenizer.encode(input_text.strip(), add_special_tokens=False)
             src_tokens = [tokenizer.decode([tid]) for tid in src_ids]
             src_tokens = ["<sos>"] + src_tokens + ["<eos>"]
+
+            tgt_ids = tokenizer.encode(output, add_special_tokens=False)
+            tgt_tokens = [tokenizer.decode([tid]) for tid in tgt_ids]
+
+            plot_attention_heatmap(attn_weights, src_tokens, tgt_tokens)
+
+    elif translate_btn:
+        st.warning("Please enter a sentence first.")
+
+
