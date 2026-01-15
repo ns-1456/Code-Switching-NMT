@@ -241,3 +241,5 @@ def main():
         st.warning("Please enter a sentence first.")
 
 
+if __name__ == "__main__":
+    main()
