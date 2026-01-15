@@ -222,3 +222,12 @@ def main():
             st.markdown("**Hinglish**")
             st.success(output)
 
+        # Attention heatmap
+        if show_attention and attn_weights:
+            st.divider()
+            st.markdown("### Attention Map")
+
+            # Get token-level strings for labels
+            src_ids = tokenizer.encode(input_text.strip(), add_special_tokens=False)
+            src_tokens = [tokenizer.decode([tid]) for tid in src_ids]
+            src_tokens = ["<sos>"] + src_tokens + ["<eos>"]
