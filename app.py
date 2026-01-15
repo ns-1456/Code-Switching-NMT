@@ -188,3 +188,12 @@ def main():
             "What is your name?",
             "The food is delicious",
             "Don't worry about it",
+            "We should leave now",
+        ]
+        cols = st.columns(3)
+        for i, ex in enumerate(examples):
+            with cols[i % 3]:
+                if st.button(ex, key=f"ex_{i}", use_container_width=True):
+                    input_text = ex
+                    translate_btn = True
+
