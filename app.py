@@ -197,3 +197,8 @@ def main():
                     input_text = ex
                     translate_btn = True
 
+    # Translation
+    if translate_btn and input_text.strip():
+        with st.spinner("Translating..."):
+            if method == "Greedy":
+                output, attn_weights = translate_greedy(
